@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import p.kirke.weatherapp.data.WeatherResponse;
+import p.kirke.weatherapp.model.WeatherResponse;
 import p.kirke.weatherapp.home.DataCallback;
 
 public class GetWeatherTask extends AsyncTask<String, String, String> {
@@ -33,7 +33,7 @@ public class GetWeatherTask extends AsyncTask<String, String, String> {
             BufferedReader
                     reader = new
                     BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
                 response.append(line).append("\n");
             }

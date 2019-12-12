@@ -1,4 +1,4 @@
-package p.kirke.weatherapp.data;
+package p.kirke.weatherapp.model;
 
 import com.google.gson.annotations.SerializedName;
 

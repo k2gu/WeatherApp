@@ -5,6 +5,7 @@
     <string name="history_fragment_title">History</string>
 
     <string name="greeting">Hi, %s!</string>
-    <string name="welcome_text">Welcome to %s! It\'s %s°C outside, but it feels like %s°C</string>
+    <string name="welcome_text">Welcome to %s! It\'s %d°C outside, but it feels like %d°C</string>
+    <string name="temperature_format">%d°C</string>
 
 </resources>

@@ -1,7 +1,7 @@
 package p.kirke.weatherapp.home;
 
 import p.kirke.weatherapp.PreferencesSingleton;
-import p.kirke.weatherapp.data.WeatherResponse;
+import p.kirke.weatherapp.model.WeatherResponse;
 import p.kirke.weatherapp.http.GetWeatherTask;
 
 public class HomePresenter implements DataCallback {
@@ -26,13 +26,12 @@ public class HomePresenter implements DataCallback {
     @Override
     public void onResponse(WeatherResponse response) {
         view.showLoading(false);
-        view.showWeatherData(response.getCityName(), roundDoubleAndConvertToString(response.getActualTemperature()),
-                roundDoubleAndConvertToString(response.getFeelableTemperature()));
+        view.showWeatherData(response.getCityName(), roundDoubleToNearestInt(response.getActualTemperature()),
+                roundDoubleToNearestInt(response.getFeelableTemperature()));
     }
 
-    private String roundDoubleAndConvertToString(double doubleToRound) {
-        int doubleAsInt = (int) Math.round(doubleToRound);
-        return String.valueOf(doubleAsInt);
+    private int roundDoubleToNearestInt(double doubleToRound) {
+        return  (int) Math.round(doubleToRound);
     }
 
     @Override

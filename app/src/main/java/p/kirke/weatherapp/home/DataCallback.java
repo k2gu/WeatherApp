@@ -1,6 +1,6 @@
 package p.kirke.weatherapp.home;
 
-import p.kirke.weatherapp.data.WeatherResponse;
+import p.kirke.weatherapp.model.WeatherResponse;
 
 public interface DataCallback {
 
