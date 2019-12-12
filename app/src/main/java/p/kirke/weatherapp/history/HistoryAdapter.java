@@ -19,7 +19,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
     private List<WeatherHistory> dataList;
 
-    public HistoryAdapter(List<WeatherHistory> dataList) {
+    HistoryAdapter(List<WeatherHistory> dataList) {
         this.dataList = dataList;
     }
 
@@ -62,8 +62,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
 
             date.setText(currentItem.date);
             location.setText(currentItem.city);
-            temperature.setText(itemView.getContext().getString(R.string.temperature_format, currentItem.temperature));
-            feelableTemperature.setText(itemView.getContext().getString(R.string.temperature_format, currentItem.feelableTemperature));
+            temperature.setText(getTemperatureWithUnit(currentItem.temperature));
+            feelableTemperature.setText(getTemperatureWithUnit(currentItem.feelableTemperature));
+        }
+
+        private String getTemperatureWithUnit(int temperature) {
+            return itemView.getContext().getString(R.string.temperature_format, temperature);
         }
     }
 }

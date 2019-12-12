@@ -13,7 +13,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import p.kirke.weatherapp.R;
-import p.kirke.weatherapp.WeatherHistoryRepository;
+import p.kirke.weatherapp.db.WeatherHistoryRepository;
 import p.kirke.weatherapp.db.WeatherHistory;
 
 public class HistoryFragment extends Fragment implements HistoryCallback {

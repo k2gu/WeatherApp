@@ -1,11 +1,9 @@
-package p.kirke.weatherapp;
+package p.kirke.weatherapp.db;
 
 import android.content.Context;
 
 import java.util.List;
 
-import p.kirke.weatherapp.db.WeatherDB;
-import p.kirke.weatherapp.db.WeatherHistory;
 import p.kirke.weatherapp.history.HistoryCallback;
 
 public class WeatherHistoryRepository {

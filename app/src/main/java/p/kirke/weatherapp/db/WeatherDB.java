@@ -12,7 +12,7 @@ public abstract class WeatherDB extends RoomDatabase {
     private static final String databaseName = "weather_db";
     private static WeatherDB instance;
 
-    public static synchronized WeatherDB getInstance(Context context) {
+    static synchronized WeatherDB getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), WeatherDB.class, databaseName)
                     .allowMainThreadQueries()

@@ -13,8 +13,6 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import p.kirke.weatherapp.R;
-import p.kirke.weatherapp.WeatherHistoryRepository;
-import p.kirke.weatherapp.db.WeatherHistory;
 
 public class HomeFragment extends Fragment implements HomeView {
 
@@ -45,11 +43,7 @@ public class HomeFragment extends Fragment implements HomeView {
         }
         //TODO  a lot of ifs missing
 
-        // presenter.getData();
-
-        WeatherHistoryRepository repository = new WeatherHistoryRepository(getContext());
-        repository.insertNewInfo(new WeatherHistory("Tallinn", 0, 0, "12.12 2019"));
-        //repository.getAllData();
+        presenter.getData();
     }
 
     @Override
