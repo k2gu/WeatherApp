@@ -15,8 +15,8 @@ public class HomePresenter implements DataCallback {
     }
 
     void getData() {
-        view.openGalleryOnClickImage();
         view.showName(preferencesSingleton.getName());
+        view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
         view.showLoading(true);
         executeRequest();
     }

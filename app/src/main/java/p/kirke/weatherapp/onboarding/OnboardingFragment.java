@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import p.kirke.weatherapp.MainActivity;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
 
@@ -62,6 +63,7 @@ public class OnboardingFragment extends Fragment implements OnboardingView {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        //TODO ei saa activityst kätte
         if (requestCode == READ_EXTERNAL_STORAGE_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             pickFromGallery();
         }
@@ -72,20 +74,29 @@ public class OnboardingFragment extends Fragment implements OnboardingView {
         intent.setType("image/*");
         String[] mimeTypes = {"image/jpeg", "image/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        getActivity().startActivityForResult(intent, GALLERY_REQUEST_CODE);
+        Activity activity = getActivity();
+        if (activity != null) {
+            getActivity().startActivityForResult(intent, GALLERY_REQUEST_CODE);
+        }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == GALLERY_REQUEST_CODE) {//data.getData return the content URI for the selected Image
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String imgDecodableString = cursor.getString(columnIndex);
-                cursor.close();
-                PreferencesSingleton.getSingletonInstance(getContext()).setPrefPictureLocation(imgDecodableString);
+                MainActivity activity = ((MainActivity) getActivity());
+                if (activity != null) {
+                    Uri selectedImage = data.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    if (selectedImage == null) return;
+                    Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                    if (cursor == null) return;
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    String imgDecodableString = cursor.getString(columnIndex);
+                    cursor.close();
+                    PreferencesSingleton.getSingletonInstance(getContext()).setPrefPictureLocation(imgDecodableString);
+                    ((MainActivity) getActivity()).replaceOnboardingFragment();
+                }
             }
         }
     }

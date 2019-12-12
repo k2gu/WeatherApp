@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import p.kirke.weatherapp.history.HistoryFragment;
 import p.kirke.weatherapp.home.HomeFragment;
+import p.kirke.weatherapp.onboarding.OnboardingFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
     public TabLayout tabLayout;
     private LocationHandler locationHandler = new LocationHandler();
     //TODO Remove
-    private HomeFragment fragment = new HomeFragment();
+    private OnboardingFragment fragment = new OnboardingFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +68,22 @@ public class MainActivity extends AppCompatActivity {
         return adapter;
     }
 
+    public void replaceOnboardingFragment() {
+        ((TabAdapter) viewPager.getAdapter()).replaceFragment(0, new HomeFragment(), getString(R.string.home_fragment_title));
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        // TODO notify
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // TODO
         fragment.onActivityResult(requestCode, resultCode, data);
     }
 }

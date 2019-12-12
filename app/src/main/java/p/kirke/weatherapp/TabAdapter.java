@@ -24,9 +24,21 @@ public class TabAdapter extends FragmentStatePagerAdapter {
         return fragments.get(position);
     }
 
+    @Override
+    public int getItemPosition(Object object) {
+        return POSITION_NONE;
+    }
+
     void addFragment(Fragment fragment, String title) {
+        //TODO
         fragments.add(fragment);
         fragmentTitles.add(title);
+    }
+
+    void replaceFragment(int position, Fragment fragment, String title) {
+        fragments.set(0, fragment);
+        fragmentTitles.set(0, title);
+        notifyDataSetChanged();
     }
 
     @Nullable

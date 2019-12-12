@@ -11,6 +11,4 @@ interface HomeView {
     void showLoading(boolean showLoading);
 
     void displayUserImage(String image);
-
-    void openGalleryOnClickImage();
 }
