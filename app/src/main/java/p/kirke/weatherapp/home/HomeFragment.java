@@ -1,5 +1,7 @@
 package p.kirke.weatherapp.home;
 
+import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import androidx.fragment.app.Fragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import p.kirke.weatherapp.ImagePicker;
+import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
 
 public class HomeFragment extends Fragment implements HomeView {
@@ -26,6 +30,7 @@ public class HomeFragment extends Fragment implements HomeView {
     ProgressBar loadingBar;
 
     private HomePresenter presenter;
+    private ImagePicker imagePicker;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,8 +44,9 @@ public class HomeFragment extends Fragment implements HomeView {
     public void onResume() {
         super.onResume();
         if (presenter == null) {
-            presenter = new HomePresenter(this);
+            presenter = new HomePresenter(this, PreferencesSingleton.getSingletonInstance(getContext()));
         }
+
         //TODO  a lot of ifs missing
 
         presenter.getData();
@@ -65,5 +71,26 @@ public class HomeFragment extends Fragment implements HomeView {
     public void showLoading(boolean showLoading) {
         introduction.setVisibility(showLoading ? View.GONE : View.VISIBLE);
         loadingBar.setVisibility(showLoading ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void displayUserImage(String image) {
+        userAvatar.setImageBitmap(BitmapFactory.decodeFile(image));
+    }
+
+    @Override
+    public void openGalleryOnClickImage() {
+        userAvatar.setOnClickListener(view -> {
+            if (imagePicker == null) {
+                imagePicker = new ImagePicker(getActivity(), presenter);
+            }
+            imagePicker.pickFromGallery();
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        imagePicker.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

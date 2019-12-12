@@ -1,40 +1,57 @@
 package p.kirke.weatherapp;
 
-import android.Manifest;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.pm.PackageManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import p.kirke.weatherapp.history.HistoryFragment;
 import p.kirke.weatherapp.home.HomeFragment;
-import p.kirke.weatherapp.http.GetWeatherTask;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int PERMISSION_ACCESS_FINE_LOCATION = 123;
 
     @BindView(R.id.fragment_container)
     public ViewPager viewPager;
     @BindView(R.id.tab_layout)
     public TabLayout tabLayout;
+    private LocationHandler locationHandler = new LocationHandler();
+    //TODO Remove
+    private HomeFragment fragment = new HomeFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        //requestPermission();
+        locationHandler.requestPermission(this);
         createFragmentViewPager();
+    }
+
+    private void setUpPushNotification() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
+        notificationIntent.addCategory("android.intent.category.DEFAULT");
+
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR_OF_DAY, 15);
+        cal.add(Calendar.MINUTE, 28);
+        cal.add(Calendar.SECOND, 0);
+        if (alarmManager != null) {
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 24 * 60 * 60 * 1000, broadcast);
+        }
     }
 
     private void createFragmentViewPager() {
@@ -45,30 +62,20 @@ public class MainActivity extends AppCompatActivity {
 
     private TabAdapter getTabAdapterWithFragments() {
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(new HomeFragment(), getString(R.string.home_fragment_title));
+        adapter.addFragment(fragment, getString(R.string.home_fragment_title));
         adapter.addFragment(new HistoryFragment(), getString(R.string.history_fragment_title));
         return adapter;
     }
 
-    public void requestPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSION_ACCESS_FINE_LOCATION);
-        }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_ACCESS_FINE_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // All good!
-                } else {
-                    // TODO
-                }
-
-                break;
-        }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        fragment.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -9,4 +9,8 @@ interface HomeView {
     void showError();
 
     void showLoading(boolean showLoading);
+
+    void displayUserImage(String image);
+
+    void openGalleryOnClickImage();
 }

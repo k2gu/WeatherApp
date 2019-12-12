@@ -6,5 +6,7 @@ public interface DataCallback {
 
     void onResponse(WeatherResponse response);
 
+    void onImageSelected(String image);
+
     void onError();
 }
