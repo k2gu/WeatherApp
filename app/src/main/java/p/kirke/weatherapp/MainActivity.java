@@ -63,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TabAdapter getTabAdapterWithFragments() {
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
-        adapter.addFragment(fragment, getString(R.string.home_fragment_title));
+        boolean hasUserData = PreferencesSingleton.getSingletonInstance(getBaseContext()).hasUserData();
+        adapter.addFragment(hasUserData ? new HomeFragment() : fragment, getString(R.string.home_fragment_title));
         adapter.addFragment(new HistoryFragment(), getString(R.string.history_fragment_title));
         return adapter;
     }

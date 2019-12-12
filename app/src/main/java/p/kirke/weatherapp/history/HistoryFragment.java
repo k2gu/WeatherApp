@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,8 +14,8 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import p.kirke.weatherapp.R;
-import p.kirke.weatherapp.db.WeatherHistoryRepository;
 import p.kirke.weatherapp.db.WeatherHistory;
+import p.kirke.weatherapp.db.WeatherHistoryRepository;
 
 public class HistoryFragment extends Fragment implements HistoryCallback {
 
@@ -27,10 +28,9 @@ public class HistoryFragment extends Fragment implements HistoryCallback {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         WeatherHistoryRepository repository = new WeatherHistoryRepository(getContext());
-        //repository.insertNewInfo(new WeatherHistory("Tallinn", 0, 0));
         repository.getAllData(this);
     }
 

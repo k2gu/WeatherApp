@@ -15,7 +15,7 @@ public class WeatherHistoryRepository {
     }
 
     public void getAllData(HistoryCallback callback) {
-        //TODO backgroundthread
+        //TODO backgroundthread, get all besides todays.
         List<WeatherHistory> historyList = db.weatherHistoryDAO().getAll();
         callback.onResponse(historyList);
     }

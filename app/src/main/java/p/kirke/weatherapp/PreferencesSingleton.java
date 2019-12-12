@@ -60,4 +60,9 @@ public class PreferencesSingleton {
     public void setPrefLastKnownDate(String date) {
         sharedPreferences.edit().putString(PREF_LAST_KNOWN_DATE, date).apply();
     }
+
+    public boolean hasUserData() {
+        return !sharedPreferences.getString(PREF_NAME, "").isEmpty() &&
+                !sharedPreferences.getString(PREF_PICTURE_LOCATION, "").isEmpty();
+    }
 }
