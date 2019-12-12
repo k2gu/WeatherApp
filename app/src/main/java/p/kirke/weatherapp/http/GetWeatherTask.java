@@ -1,4 +1,4 @@
-package p.kirke.weatherapp;
+package p.kirke.weatherapp.http;
 
 import android.os.AsyncTask;
 
