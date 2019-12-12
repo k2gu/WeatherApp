@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+
+    <string name="greeting">Hi, %s!</string>
+    <string name="welcome_text">Welcome to %s! It\'s %s °C outside, but it feels like %s °C</string>
+
+</resources>
