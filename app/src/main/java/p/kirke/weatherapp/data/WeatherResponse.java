@@ -5,11 +5,23 @@ import com.google.gson.annotations.SerializedName;
 public class WeatherResponse {
 
     @SerializedName("main")
-    WeatherCaracteristics mainCharacteristics;
+    private WeatherCaracteristics mainCharacteristics;
     @SerializedName("name")
-    String cityName;
+    private String cityName;
 
     WeatherResponse() {
         // Gson constructor
+    }
+
+    public double getActualTemperature() {
+        return mainCharacteristics.temp;
+    }
+
+    public double getFeelableTemperature() {
+        return mainCharacteristics.feels_like;
+    }
+
+    public String getCityName() {
+        return cityName;
     }
 }

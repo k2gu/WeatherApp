@@ -33,18 +33,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        GetWeatherTask task = new GetWeatherTask();
-        task.execute();
         //requestPermission();
         createFragmentViewPager();
-    }
-
-    private void startFragment() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        //transaction.replace(R.id.container,YOUR_FRAGMENT_NAME,YOUR_FRAGMENT_STRING_TAG);
-        transaction.addToBackStack(null);
-        transaction.commit();
     }
 
     private void createFragmentViewPager() {

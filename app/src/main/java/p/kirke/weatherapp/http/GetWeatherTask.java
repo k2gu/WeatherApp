@@ -10,12 +10,18 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import p.kirke.weatherapp.data.WeatherResponse;
+import p.kirke.weatherapp.home.DataCallback;
 
 public class GetWeatherTask extends AsyncTask<String, String, String> {
 
+    private DataCallback callback;
+
+    public GetWeatherTask(DataCallback callback) {
+        this.callback = callback;
+    }
+
     //TODO  api key eraldi, küsi asukohta
     private String url = "https://api.openweathermap.org/data/2.5/weather?q=Tallinn&appid=2e2e4852410b620409778022df20b777&units=metric";
-    private WeatherResponse weatherResponse;
 
     @Override
     protected String doInBackground(String... strings) {
@@ -31,13 +37,19 @@ public class GetWeatherTask extends AsyncTask<String, String, String> {
             while ((line = reader.readLine()) != null) {
                 response.append(line).append("\n");
             }
-
-            Gson gson = new Gson();
-            weatherResponse = gson.fromJson(response.toString(), WeatherResponse.class);
-            int i = 0;
+            return response.toString();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    protected void onPostExecute(String response) {
+        super.onPostExecute(response);
+
+        Gson gson = new Gson();
+        WeatherResponse weatherResponse = gson.fromJson(response, WeatherResponse.class);
+        callback.onResponse(weatherResponse);
     }
 }

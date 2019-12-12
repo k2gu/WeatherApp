@@ -3,6 +3,7 @@
     <dimen name="default_padding">15dp</dimen>
 
     <dimen name="tab_bar_height">30dp</dimen>
+    <dimen name="user_avatar_size">250dp</dimen>
 
     <dimen name="font_title">20sp</dimen>
     <dimen name="font_greeting">25sp</dimen>
