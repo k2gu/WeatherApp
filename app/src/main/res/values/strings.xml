@@ -7,5 +7,8 @@
     <string name="greeting">Hi, %s!</string>
     <string name="welcome_text">Welcome to %s! It\'s %d°C outside, but it feels like %d°C</string>
     <string name="temperature_format">%d°C</string>
+    <string name="insert_your_name">Insert your first name</string>
+    <string name="save">Save</string>
+    <string name="select_avatar">Select avatar</string>
 
 </resources>
