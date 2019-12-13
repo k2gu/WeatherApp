@@ -1,54 +1,82 @@
 package p.kirke.weatherapp;
 
+import android.util.SparseArray;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import p.kirke.weatherapp.history.HistoryFragment;
+import p.kirke.weatherapp.home.HomeFragment;
+import p.kirke.weatherapp.onboarding.OnBoardingFragment;
 
 public class TabAdapter extends FragmentStatePagerAdapter {
 
-    private final List<Fragment> fragments = new ArrayList<>();
-    private final List<String> fragmentTitles = new ArrayList<>();
+    private String[] fragmentTitles;
+    private boolean hasUserInfo;
+    private SparseArray<Fragment> aliveFragments = new SparseArray<>();
 
-    TabAdapter(FragmentManager fragmentManager) {
+    TabAdapter(FragmentManager fragmentManager, boolean hasUserInfo, String[] fragmentTitles) {
         super(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        this.hasUserInfo = hasUserInfo;
+        this.fragmentTitles = fragmentTitles;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        return fragments.get(position);
+        switch (position) {
+            case 0:
+                return hasUserInfo ? new HomeFragment() : new OnBoardingFragment();
+            case 1:
+                return new HistoryFragment();
+        }
+        return new Fragment();
     }
 
     @Override
-    public int getItemPosition(Object object) {
-        return POSITION_NONE;
+    public int getItemPosition(@NonNull Object object) {
+        if (aliveFragments.get(0) instanceof OnBoardingFragment && hasUserInfo) {
+            return POSITION_NONE;
+        } else {
+            return POSITION_UNCHANGED;
+        }
     }
 
-    void addFragment(Fragment fragment, String title) {
-        //TODO
-        fragments.add(fragment);
-        fragmentTitles.add(title);
+    @NonNull
+    @Override
+    public Object instantiateItem(@NonNull ViewGroup viewGroup, int position) {
+        Fragment fragment = (Fragment) super.instantiateItem(viewGroup, position);
+        aliveFragments.put(position, fragment);
+        return fragment;
     }
 
-    void replaceFragment(int position, Fragment fragment, String title) {
-        fragments.set(0, fragment);
-        fragmentTitles.set(0, title);
+    @Override
+    public void destroyItem(@NonNull ViewGroup viewGroup, int position, @NonNull Object object) {
+        aliveFragments.remove(position);
+        super.destroyItem(viewGroup, position, object);
+    }
+
+    Fragment getFragment() {
+        return aliveFragments.size() > 0 ? aliveFragments.get(0) : null;
+    }
+
+    void replaceFragmentOnboarding() {
+        hasUserInfo = true;
         notifyDataSetChanged();
     }
 
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
-        return fragmentTitles.get(position);
+        return fragmentTitles[position];
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return 2;
     }
 }
