@@ -1,4 +1,4 @@
-package p.kirke.weatherapp;
+package p.kirke.weatherapp.home;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -30,26 +30,20 @@ public class LocationHandler {
         }
     }
 
-    void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == ACCESS_COARSE_LOCATION && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             getUserLocation();
         }
     }
 
     @SuppressLint("MissingPermission")
-    private Location getUserLocation() {
+    private void getUserLocation() {
         LocationManager locationManager = (LocationManager) activity.getApplicationContext().getSystemService(LOCATION_SERVICE);
-        /*FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity);
-        fusedLocationClient.getLastLocation().addOnSuccessListener(activity, location -> {
-            Location location123 = location;
-        });*/
         Location location = null;
         //TODO
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationChangeListener());
-        }
 
-        return location;
+        }
     }
 }

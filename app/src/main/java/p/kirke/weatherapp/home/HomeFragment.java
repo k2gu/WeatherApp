@@ -9,12 +9,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
+import p.kirke.weatherapp.db.WeatherHistoryRepository;
 
 public class HomeFragment extends Fragment implements HomeView {
 
@@ -28,6 +30,7 @@ public class HomeFragment extends Fragment implements HomeView {
     ProgressBar loadingBar;
 
     private HomePresenter presenter;
+    private LocationHandler locationHandler = new LocationHandler();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +44,9 @@ public class HomeFragment extends Fragment implements HomeView {
     public void onResume() {
         super.onResume();
         if (presenter == null) {
-            presenter = new HomePresenter(this, PreferencesSingleton.getSingletonInstance(getContext()));
+            presenter = new HomePresenter(this, PreferencesSingleton.getSingletonInstance(getContext()),
+                    new WeatherHistoryRepository(getContext()));
+            locationHandler.requestPermission(getActivity());
         }
 
         //TODO  a lot of ifs missing
@@ -73,5 +78,11 @@ public class HomeFragment extends Fragment implements HomeView {
     @Override
     public void displayUserImage(String image) {
         userAvatar.setImageBitmap(BitmapFactory.decodeFile(image));
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

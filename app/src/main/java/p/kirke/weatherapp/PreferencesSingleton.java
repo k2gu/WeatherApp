@@ -26,8 +26,7 @@ public class PreferencesSingleton {
     }
 
     public String getName() {
-        //TODO
-        return sharedPreferences.getString(PREF_NAME, "Kirke");
+        return sharedPreferences.getString(PREF_NAME, "");
     }
 
     public void setName(String name) {
@@ -35,8 +34,7 @@ public class PreferencesSingleton {
     }
 
     public String getPrefPictureLocation() {
-        //TODO
-        return sharedPreferences.getString(PREF_PICTURE_LOCATION, "Kirke");
+        return sharedPreferences.getString(PREF_PICTURE_LOCATION, "");
     }
 
     public void setPrefPictureLocation(String location) {
@@ -44,8 +42,7 @@ public class PreferencesSingleton {
     }
 
     public String getPrefLastKnownLocation() {
-        //TODO
-        return sharedPreferences.getString(PREF_LAST_KNOWN_LOCATION, "Tallinn");
+        return sharedPreferences.getString(PREF_LAST_KNOWN_LOCATION, "");
     }
 
     public void setPrefLastKnownLocation(String city) {
@@ -53,15 +50,14 @@ public class PreferencesSingleton {
     }
 
     public String getPrefLastKnownDate() {
-        //TODO
-        return sharedPreferences.getString(PREF_LAST_KNOWN_DATE, "12.12 2019");
+        return sharedPreferences.getString(PREF_LAST_KNOWN_DATE, "");
     }
 
     public void setPrefLastKnownDate(String date) {
         sharedPreferences.edit().putString(PREF_LAST_KNOWN_DATE, date).apply();
     }
 
-    public boolean hasUserData() {
+    boolean hasUserData() {
         return !sharedPreferences.getString(PREF_NAME, "").isEmpty() &&
                 !sharedPreferences.getString(PREF_PICTURE_LOCATION, "").isEmpty();
     }

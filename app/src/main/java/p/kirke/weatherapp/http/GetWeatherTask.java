@@ -21,7 +21,7 @@ public class GetWeatherTask extends AsyncTask<String, String, String> {
     }
 
     //TODO  api key eraldi, küsi asukohta
-    private String url = "https://api.openweathermap.org/data/2.5/weather?q=Tallinn&appid=2e2e4852410b620409778022df20b777&units=metric";
+    private String url = "https://api.openweathermap.org/data/2.5/weather?lat=59.411&lon=24.707&appid=2e2e4852410b620409778022df20b777&units=metric";
 
     @Override
     protected String doInBackground(String... strings) {

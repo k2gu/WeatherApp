@@ -21,8 +21,8 @@ public class HomePresenter implements DataCallback {
     void getData() {
         view.showName(preferencesSingleton.getName());
         view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
-        view.showLoading(true);
         if (shouldExecuteRequest()) {
+            view.showLoading(true);
             executeRequest();
         }
     }
@@ -34,7 +34,7 @@ public class HomePresenter implements DataCallback {
     private boolean hasRequestedDataToday() {
         String lastRequestDate = preferencesSingleton.getPrefLastKnownDate();
         // TODO is it today
-        return true;
+        return false;
     }
 
     private boolean isInSameLocation() {
@@ -52,10 +52,15 @@ public class HomePresenter implements DataCallback {
     public void onResponse(WeatherResponse response) {
         int roundedActualTemp = roundDoubleToNearestInt(response.getActualTemperature());
         int roundedFeelableTemp = roundDoubleToNearestInt(response.getFeelableTemperature());
+        saveLocationToPrefSingleton(response.getCityName());
         view.showLoading(false);
         view.showWeatherData(response.getCityName(), roundedActualTemp, roundedFeelableTemp);
         //TODO correct date
         repository.insertNewInfo(new WeatherHistory(response.getCityName(), roundedActualTemp, roundedFeelableTemp, "19.12 2019"));
+    }
+
+    private void saveLocationToPrefSingleton(String cityName) {
+        preferencesSingleton.setPrefPictureLocation(cityName);
     }
 
     @Override
