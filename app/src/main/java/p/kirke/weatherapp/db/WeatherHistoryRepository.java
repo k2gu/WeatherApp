@@ -20,7 +20,7 @@ public class WeatherHistoryRepository {
         callback.onResponse(historyList);
     }
 
-    public void insertNewInfo(WeatherHistory history) {
+    public void addNewHistoryElement(WeatherHistory history) {
         db.weatherHistoryDAO().insertWeatherHistory(history);
     }
 }

@@ -46,11 +46,8 @@ public class HomeFragment extends Fragment implements HomeView {
         if (presenter == null) {
             presenter = new HomePresenter(this, PreferencesSingleton.getSingletonInstance(getContext()),
                     new WeatherHistoryRepository(getContext()), new PermissionHandler(getActivity()),
-                    new LocationManager(getActivity()));
+                    new LocationHandler(getActivity()));
         }
-
-        //TODO  a lot of ifs missing
-
         presenter.start();
     }
 

@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import p.kirke.weatherapp.history.HistoryFragment;
 import p.kirke.weatherapp.home.HomeFragment;
 import p.kirke.weatherapp.onboarding.OnBoardingFragment;
+import p.kirke.weatherapp.util.Const;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,8 +58,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        homeFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        onboardingFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+         // TODO dont save fragments, ask from adapter
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (Const.LOCATION_REQUEST_CODE == requestCode) {
+            homeFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        } else if (Const.READ_EXTERNAL_STORAGE_REQUEST_CODE == requestCode) {
+            onboardingFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
         // TODO notify
     }
 

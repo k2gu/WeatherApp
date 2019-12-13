@@ -7,6 +7,7 @@ import p.kirke.weatherapp.db.WeatherHistoryRepository;
 import p.kirke.weatherapp.http.GetWeatherTask;
 import p.kirke.weatherapp.model.WeatherResponse;
 import p.kirke.weatherapp.util.Const;
+import p.kirke.weatherapp.util.DateUtil;
 
 public class HomePresenter implements DataCallback {
 
@@ -14,10 +15,10 @@ public class HomePresenter implements DataCallback {
     private PreferencesSingleton preferencesSingleton;
     private WeatherHistoryRepository repository;
     private PermissionHandler permissionHandler;
-    private LocationManager locationManager;
+    private LocationHandler locationManager;
 
     HomePresenter(HomeView view, PreferencesSingleton preferencesSingleton, WeatherHistoryRepository repository,
-                  PermissionHandler permissionHandler, LocationManager locationManager) {
+                  PermissionHandler permissionHandler, LocationHandler locationManager) {
         this.view = view;
         this.preferencesSingleton = preferencesSingleton;
         this.repository = repository;
@@ -37,14 +38,22 @@ public class HomePresenter implements DataCallback {
 
     @Override
     public void onLocationResult(double latitude, double longitude) {
-        if (shouldExecuteRequest()) {
+        if (!(hasRequestedDataToday() && isInSameLocation(latitude, longitude))) {
             view.showLoading(true);
             executeRequest(latitude, longitude);
         }
     }
 
-    private boolean shouldExecuteRequest() {
-        return !(hasRequestedDataToday() && isInSameLocation());
+    private boolean hasRequestedDataToday() {
+        String lastRequestDate = preferencesSingleton.getPrefLastKnownDate();
+        return lastRequestDate.equals(DateUtil.getTodaysDate());
+    }
+
+    private boolean isInSameLocation(double latitude, double longitude) {
+        String lastKnownLocation = preferencesSingleton.getPrefLastKnownLocation();
+        String currentLocation = locationManager.getSubLocalityFromCoordinates(latitude, longitude);
+        //return lastKnownLocation.equals(currentLocation);
+        return false;
     }
 
     private void executeRequest(double latitude, double longitude) {
@@ -52,31 +61,20 @@ public class HomePresenter implements DataCallback {
         task.execute(String.valueOf(latitude), String.valueOf(longitude));
     }
 
-    private boolean hasRequestedDataToday() {
-        String lastRequestDate = preferencesSingleton.getPrefLastKnownDate();
-        // TODO is it today
-        return false;
-    }
-
-    private boolean isInSameLocation() {
-        String lastKnownLocation = preferencesSingleton.getPrefLastKnownLocation();
-        // TODO
-        return true;
-    }
-
     @Override
     public void onResponse(WeatherResponse response) {
         int roundedActualTemp = roundDoubleToNearestInt(response.getActualTemperature());
         int roundedFeelableTemp = roundDoubleToNearestInt(response.getFeelableTemperature());
-        saveLocationToPrefSingleton(response.getCityName());
         view.showLoading(false);
         view.showWeatherData(response.getCityName(), roundedActualTemp, roundedFeelableTemp);
-        //TODO correct date
-        repository.insertNewInfo(new WeatherHistory(response.getCityName(), roundedActualTemp, roundedFeelableTemp, "19.12 2019"));
+        saveData(response, roundedActualTemp, roundedFeelableTemp);
     }
 
-    private void saveLocationToPrefSingleton(String cityName) {
-        preferencesSingleton.setPrefPictureLocation(cityName);
+    private void saveData(WeatherResponse response, int roundedActualTemp, int roundedFeelableTemp) {
+        String todaysDate = DateUtil.getTodaysDate();
+        preferencesSingleton.setPrefLastKnownDate(todaysDate);
+        preferencesSingleton.setPrefPictureLocation(response.getCityName());
+        repository.addNewHistoryElement(new WeatherHistory(response.getCityName(), roundedActualTemp, roundedFeelableTemp, todaysDate));
     }
 
     @Override
