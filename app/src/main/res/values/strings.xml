@@ -12,5 +12,6 @@
     <string name="select_avatar">Select avatar</string>
     <string name="notification_title">Have you checked the weather today?</string>
     <string name="notification_text">Open the app and find out!</string>
+    <string name="feelable_temperature">Feels like</string>
 
 </resources>

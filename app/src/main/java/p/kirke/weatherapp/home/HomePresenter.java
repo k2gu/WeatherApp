@@ -29,6 +29,7 @@ public class HomePresenter implements DataCallback {
     void start() {
         view.showName(preferencesSingleton.getName());
         view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
+        view.showLoading(true);
         if (permissionHandler.hasLocationPermission()) {
             locationManager.getUserLocation(this);
         } else {
@@ -39,9 +40,9 @@ public class HomePresenter implements DataCallback {
     @Override
     public void onLocationResult(double latitude, double longitude) {
         if (!(hasRequestedDataToday() && isInSameLocation(latitude, longitude))) {
-            view.showLoading(true);
             executeRequest(latitude, longitude);
         } else {
+            view.showLoading(false);
             view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
         }
     }

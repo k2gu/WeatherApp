@@ -63,7 +63,8 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             date.setText(currentItem.date);
             location.setText(currentItem.subLocality);
             temperature.setText(getTemperatureWithUnit(currentItem.temperature));
-            feelableTemperature.setText(getTemperatureWithUnit(currentItem.feelableTemperature));
+            feelableTemperature.setText(String.format("%s %s",itemView.getContext().getString(R.string.feelable_temperature),
+                    getTemperatureWithUnit(currentItem.feelableTemperature)));
         }
 
         private String getTemperatureWithUnit(int temperature) {
