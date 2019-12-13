@@ -1,8 +1,5 @@
 package p.kirke.weatherapp;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -11,8 +8,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,33 +21,16 @@ public class MainActivity extends AppCompatActivity {
     public ViewPager viewPager;
     @BindView(R.id.tab_layout)
     public TabLayout tabLayout;
-    private LocationHandler locationHandler = new LocationHandler();
     //TODO Remove
-    private OnboardingFragment fragment = new OnboardingFragment();
+    private OnboardingFragment onboardingFragment = new OnboardingFragment();
+    private HomeFragment homeFragment = new HomeFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        locationHandler.requestPermission(this);
         createFragmentViewPager();
-    }
-
-    private void setUpPushNotification() {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-
-        Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
-        notificationIntent.addCategory("android.intent.category.DEFAULT");
-
-        PendingIntent broadcast = PendingIntent.getBroadcast(this, 100, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR_OF_DAY, 15);
-        cal.add(Calendar.MINUTE, 28);
-        cal.add(Calendar.SECOND, 0);
-        if (alarmManager != null) {
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 24 * 60 * 60 * 1000, broadcast);
-        }
     }
 
     private void createFragmentViewPager() {
@@ -64,20 +42,23 @@ public class MainActivity extends AppCompatActivity {
     private TabAdapter getTabAdapterWithFragments() {
         TabAdapter adapter = new TabAdapter(getSupportFragmentManager());
         boolean hasUserData = PreferencesSingleton.getSingletonInstance(getBaseContext()).hasUserData();
-        adapter.addFragment(hasUserData ? new HomeFragment() : fragment, getString(R.string.home_fragment_title));
+        adapter.addFragment(hasUserData ? homeFragment : onboardingFragment, getString(R.string.home_fragment_title));
         adapter.addFragment(new HistoryFragment(), getString(R.string.history_fragment_title));
         return adapter;
     }
 
     public void replaceOnboardingFragment() {
-        ((TabAdapter) viewPager.getAdapter()).replaceFragment(0, new HomeFragment(), getString(R.string.home_fragment_title));
+        TabAdapter adapter = (TabAdapter) viewPager.getAdapter();
+        if (adapter != null) {
+            adapter.replaceFragment(0, homeFragment, getString(R.string.home_fragment_title));
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        fragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        homeFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        onboardingFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);
         // TODO notify
     }
 
@@ -85,6 +66,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // TODO
-        fragment.onActivityResult(requestCode, resultCode, data);
+        onboardingFragment.onActivityResult(requestCode, resultCode, data);
     }
 }

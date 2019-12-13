@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
 import p.kirke.weatherapp.db.WeatherHistoryRepository;
@@ -30,7 +31,6 @@ public class HomeFragment extends Fragment implements HomeView {
     ProgressBar loadingBar;
 
     private HomePresenter presenter;
-    private LocationHandler locationHandler = new LocationHandler();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,13 +45,13 @@ public class HomeFragment extends Fragment implements HomeView {
         super.onResume();
         if (presenter == null) {
             presenter = new HomePresenter(this, PreferencesSingleton.getSingletonInstance(getContext()),
-                    new WeatherHistoryRepository(getContext()));
-            locationHandler.requestPermission(getActivity());
+                    new WeatherHistoryRepository(getContext()), new PermissionHandler(getActivity()),
+                    new LocationManager(getActivity()));
         }
 
         //TODO  a lot of ifs missing
 
-        presenter.getData();
+        presenter.start();
     }
 
     @Override
@@ -77,12 +77,13 @@ public class HomeFragment extends Fragment implements HomeView {
 
     @Override
     public void displayUserImage(String image) {
+        //TODO save image
         userAvatar.setImageBitmap(BitmapFactory.decodeFile(image));
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        locationHandler.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        presenter.onPermissionResponse(requestCode, permissions, grantResults);
     }
 }

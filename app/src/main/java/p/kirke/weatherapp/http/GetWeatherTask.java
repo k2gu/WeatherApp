@@ -9,8 +9,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import p.kirke.weatherapp.model.WeatherResponse;
 import p.kirke.weatherapp.home.DataCallback;
+import p.kirke.weatherapp.model.WeatherResponse;
+import p.kirke.weatherapp.util.Const;
 
 public class GetWeatherTask extends AsyncTask<String, String, String> {
 
@@ -20,14 +21,11 @@ public class GetWeatherTask extends AsyncTask<String, String, String> {
         this.callback = callback;
     }
 
-    //TODO  api key eraldi, küsi asukohta
-    private String url = "https://api.openweathermap.org/data/2.5/weather?lat=59.411&lon=24.707&appid=2e2e4852410b620409778022df20b777&units=metric";
-
     @Override
     protected String doInBackground(String... strings) {
         try {
             StringBuilder response = new StringBuilder();
-            URL url = new URL(this.url);
+            URL url = new URL(getUrl(strings[0], strings[1]));
             HttpURLConnection urlConnection = (HttpURLConnection)
                     url.openConnection();
             BufferedReader
@@ -42,6 +40,11 @@ public class GetWeatherTask extends AsyncTask<String, String, String> {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String getUrl(String latitude, String longitude) {
+        // TODO api key
+        return String.format(Const.GET_WEATHER_INFO_URL, latitude, longitude, "2e2e4852410b620409778022df20b777");
     }
 
     @Override

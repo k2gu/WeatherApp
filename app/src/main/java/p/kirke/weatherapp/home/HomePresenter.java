@@ -1,34 +1,55 @@
 package p.kirke.weatherapp.home;
 
+import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.db.WeatherHistory;
 import p.kirke.weatherapp.db.WeatherHistoryRepository;
 import p.kirke.weatherapp.http.GetWeatherTask;
 import p.kirke.weatherapp.model.WeatherResponse;
+import p.kirke.weatherapp.util.Const;
 
 public class HomePresenter implements DataCallback {
 
     private HomeView view;
     private PreferencesSingleton preferencesSingleton;
     private WeatherHistoryRepository repository;
+    private PermissionHandler permissionHandler;
+    private LocationManager locationManager;
 
-    HomePresenter(HomeView view, PreferencesSingleton preferencesSingleton, WeatherHistoryRepository repository) {
+    HomePresenter(HomeView view, PreferencesSingleton preferencesSingleton, WeatherHistoryRepository repository,
+                  PermissionHandler permissionHandler, LocationManager locationManager) {
         this.view = view;
         this.preferencesSingleton = preferencesSingleton;
         this.repository = repository;
+        this.permissionHandler = permissionHandler;
+        this.locationManager = locationManager;
     }
 
-    void getData() {
+    void start() {
         view.showName(preferencesSingleton.getName());
         view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
+        if (permissionHandler.hasLocationPermission()) {
+            locationManager.getUserLocation(this);
+        } else {
+            permissionHandler.requestLocationPermissions();
+        }
+    }
+
+    @Override
+    public void onLocationResult(double latitude, double longitude) {
         if (shouldExecuteRequest()) {
             view.showLoading(true);
-            executeRequest();
+            executeRequest(latitude, longitude);
         }
     }
 
     private boolean shouldExecuteRequest() {
         return !(hasRequestedDataToday() && isInSameLocation());
+    }
+
+    private void executeRequest(double latitude, double longitude) {
+        GetWeatherTask task = new GetWeatherTask(this);
+        task.execute(String.valueOf(latitude), String.valueOf(longitude));
     }
 
     private boolean hasRequestedDataToday() {
@@ -41,11 +62,6 @@ public class HomePresenter implements DataCallback {
         String lastKnownLocation = preferencesSingleton.getPrefLastKnownLocation();
         // TODO
         return true;
-    }
-
-    private void executeRequest() {
-        GetWeatherTask task = new GetWeatherTask(this);
-        task.execute();
     }
 
     @Override
@@ -75,5 +91,12 @@ public class HomePresenter implements DataCallback {
     @Override
     public void onError() {
         view.showError();
+    }
+
+    void onPermissionResponse(int requestCode, String[] permissions, int[] grantResults) {
+        // TODO what if cancelled?
+        if (requestCode == Const.LOCATION_REQUEST_CODE) {
+            locationManager.getUserLocation(this);
+        }
     }
 }

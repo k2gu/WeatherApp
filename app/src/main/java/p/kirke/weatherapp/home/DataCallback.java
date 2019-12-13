@@ -8,5 +8,7 @@ public interface DataCallback {
 
     void onImageSelected(String image);
 
+    void onLocationResult(double latitude, double longitude);
+
     void onError();
 }
