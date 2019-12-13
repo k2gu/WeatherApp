@@ -19,6 +19,8 @@ import p.kirke.weatherapp.db.WeatherHistoryRepository;
 
 public class HistoryFragment extends Fragment implements HistoryCallback {
 
+    private WeatherHistoryRepository repository;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,8 +32,15 @@ public class HistoryFragment extends Fragment implements HistoryCallback {
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        WeatherHistoryRepository repository = new WeatherHistoryRepository(getContext());
-        repository.getAllData(this);
+        repository = new WeatherHistoryRepository(getContext());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (repository != null) {
+            repository.getAllData(this);
+        }
     }
 
     @Override
