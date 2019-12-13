@@ -41,6 +41,8 @@ public class HomePresenter implements DataCallback {
         if (!(hasRequestedDataToday() && isInSameLocation(latitude, longitude))) {
             view.showLoading(true);
             executeRequest(latitude, longitude);
+        } else {
+            view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
         }
     }
 
@@ -73,7 +75,6 @@ public class HomePresenter implements DataCallback {
     private void saveData(WeatherResponse response, int roundedActualTemp, int roundedFeelableTemp) {
         String todaysDate = DateUtil.getTodaysDate();
         preferencesSingleton.setPrefLastKnownDate(todaysDate);
-        preferencesSingleton.setPrefPictureLocation(response.getSubLocalityName());
         preferencesSingleton.setPrefLastKnownLocation(response.getSubLocalityName());
         repository.addNewHistoryElement(new WeatherHistory(response.getSubLocalityName(), roundedActualTemp, roundedFeelableTemp, todaysDate));
     }

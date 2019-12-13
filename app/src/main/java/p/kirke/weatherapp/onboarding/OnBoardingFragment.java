@@ -46,7 +46,7 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
 
     private void saveEnteredName(String name) {
         if (!name.isEmpty()) {
-            PreferencesSingleton.getSingletonInstance(getContext()).setName(name);
+            PreferencesSingleton.getSingletonInstance(getContext()).setName(name.trim());
         }
     }
 
@@ -66,13 +66,31 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
 
     @Override
     public void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        // TODO
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivityForResult(pickPhoto, Const.OPEN_GALLERY_REQUEST_CODE);
+        /*Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         String[] mimeTypes = {"image/jpeg", "image/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         Activity activity = getActivity();
         if (activity != null) {
             getActivity().startActivityForResult(intent, Const.OPEN_GALLERY_REQUEST_CODE);
+        }*/
+    }
+
+    @Override
+    public void savePicture(String pictureLocation) {
+        // TODO
+    }
+
+    @Override
+    public void openHomeFragment() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            activity.replaceOnboardingFragment();
         }
     }
 
@@ -95,8 +113,7 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     String imgDecodableString = cursor.getString(columnIndex);
                     cursor.close();
-                    PreferencesSingleton.getSingletonInstance(getContext()).setPrefPictureLocation(imgDecodableString);
-                    ((MainActivity) getActivity()).replaceOnboardingFragment();
+                    presenter.onImageResponse(imgDecodableString);
                 }
             }
         }

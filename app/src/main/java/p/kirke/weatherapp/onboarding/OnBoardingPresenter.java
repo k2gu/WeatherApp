@@ -26,4 +26,10 @@ class OnBoardingPresenter {
     void onRequestPermission(int requestCode, String[] permissions, int[] grantResults) {
         view.openGallery();
     }
+
+    void onImageResponse(String imgDecodableString) {
+        preferencesSingleton.setPrefPictureLocation(imgDecodableString);
+        view.savePicture(imgDecodableString);
+        view.openHomeFragment();
+    }
 }
