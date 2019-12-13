@@ -22,12 +22,12 @@ import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
 import p.kirke.weatherapp.util.Const;
 
-public class OnboardingFragment extends Fragment implements OnboardingView {
+public class OnBoardingFragment extends Fragment implements OnboardingView {
 
     @BindView(R.id.name_input_field)
     EditText nameInput;
 
-    private OnboardingPresenter presenter;
+    private OnBoardingPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,7 +52,7 @@ public class OnboardingFragment extends Fragment implements OnboardingView {
 
     private void startPresenter() {
         if (presenter == null) {
-            presenter = new OnboardingPresenter(this, PreferencesSingleton.getSingletonInstance(getContext()),
+            presenter = new OnBoardingPresenter(this, PreferencesSingleton.getSingletonInstance(getContext()),
                     new PermissionHandler(getActivity()));
         }
         presenter.start();

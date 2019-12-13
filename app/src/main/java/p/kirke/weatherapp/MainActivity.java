@@ -13,7 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import p.kirke.weatherapp.history.HistoryFragment;
 import p.kirke.weatherapp.home.HomeFragment;
-import p.kirke.weatherapp.onboarding.OnboardingFragment;
+import p.kirke.weatherapp.onboarding.OnBoardingFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tab_layout)
     public TabLayout tabLayout;
     //TODO Remove
-    private OnboardingFragment onboardingFragment = new OnboardingFragment();
+    private OnBoardingFragment onboardingFragment = new OnBoardingFragment();
     private HomeFragment homeFragment = new HomeFragment();
 
     @Override

@@ -3,13 +3,13 @@ package p.kirke.weatherapp.onboarding;
 import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
 
-public class OnboardingPresenter {
+class OnBoardingPresenter {
 
     private OnboardingView view;
     private PreferencesSingleton preferencesSingleton;
     private PermissionHandler permissionHandler;
 
-    OnboardingPresenter(OnboardingView view, PreferencesSingleton preferencesSingleton, PermissionHandler permissionHandler) {
+    OnBoardingPresenter(OnboardingView view, PreferencesSingleton preferencesSingleton, PermissionHandler permissionHandler) {
         this.view = view;
         this.preferencesSingleton = preferencesSingleton;
         this.permissionHandler = permissionHandler;
