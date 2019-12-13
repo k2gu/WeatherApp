@@ -7,7 +7,7 @@ public class WeatherResponse {
     @SerializedName("main")
     private WeatherCaracteristics mainCharacteristics;
     @SerializedName("name")
-    private String cityName;
+    private String subLocalityName;
 
     WeatherResponse() {
         // Gson constructor
@@ -21,7 +21,7 @@ public class WeatherResponse {
         return mainCharacteristics.feels_like;
     }
 
-    public String getCityName() {
-        return cityName;
+    public String getSubLocalityName() {
+        return subLocalityName;
     }
 }

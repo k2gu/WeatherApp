@@ -4,7 +4,7 @@ interface HomeView {
 
     void showName(String name);
 
-    void showWeatherData(String city, int actualTemperature, int feelableTemperature);
+    void showWeatherData(String subLocality, int actualTemperature, int feelableTemperature);
 
     void showError();
 

@@ -45,8 +45,8 @@ public class PreferencesSingleton {
         return sharedPreferences.getString(PREF_LAST_KNOWN_LOCATION, "");
     }
 
-    public void setPrefLastKnownLocation(String city) {
-        sharedPreferences.edit().putString(PREF_LAST_KNOWN_LOCATION, city).apply();
+    public void setPrefLastKnownLocation(String subLocality) {
+        sharedPreferences.edit().putString(PREF_LAST_KNOWN_LOCATION, subLocality).apply();
     }
 
     public String getPrefLastKnownDate() {

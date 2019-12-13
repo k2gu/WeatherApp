@@ -57,8 +57,8 @@ public class HomeFragment extends Fragment implements HomeView {
     }
 
     @Override
-    public void showWeatherData(String city, int actualTemperature, int feelableTemperature) {
-        introduction.setText(getString(R.string.welcome_text, city, actualTemperature, feelableTemperature));
+    public void showWeatherData(String subLocality, int actualTemperature, int feelableTemperature) {
+        introduction.setText(getString(R.string.welcome_text, subLocality, actualTemperature, feelableTemperature));
     }
 
     @Override

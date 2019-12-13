@@ -10,8 +10,8 @@ public class WeatherHistory {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    @ColumnInfo(name = "city")
-    public String city;
+    @ColumnInfo(name = "subLocality")
+    public String subLocality;
 
     @ColumnInfo(name = "temperature")
     public int temperature;
@@ -22,8 +22,8 @@ public class WeatherHistory {
     @ColumnInfo(name = "feelable_temperature")
     public int feelableTemperature;
 
-    public WeatherHistory(String city, int temperature, int feelableTemperature, String date) {
-        this.city = city;
+    public WeatherHistory(String subLocality, int temperature, int feelableTemperature, String date) {
+        this.subLocality = subLocality;
         this.temperature = temperature;
         this.feelableTemperature = feelableTemperature;
         this.date = date;

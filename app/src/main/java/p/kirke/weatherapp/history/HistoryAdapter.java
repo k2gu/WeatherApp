@@ -61,7 +61,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.ViewHold
             WeatherHistory currentItem = dataList.get(getAdapterPosition());
 
             date.setText(currentItem.date);
-            location.setText(currentItem.city);
+            location.setText(currentItem.subLocality);
             temperature.setText(getTemperatureWithUnit(currentItem.temperature));
             feelableTemperature.setText(getTemperatureWithUnit(currentItem.feelableTemperature));
         }

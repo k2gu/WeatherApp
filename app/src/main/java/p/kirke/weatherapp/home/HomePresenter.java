@@ -66,15 +66,16 @@ public class HomePresenter implements DataCallback {
         int roundedActualTemp = roundDoubleToNearestInt(response.getActualTemperature());
         int roundedFeelableTemp = roundDoubleToNearestInt(response.getFeelableTemperature());
         view.showLoading(false);
-        view.showWeatherData(response.getCityName(), roundedActualTemp, roundedFeelableTemp);
+        view.showWeatherData(response.getSubLocalityName(), roundedActualTemp, roundedFeelableTemp);
         saveData(response, roundedActualTemp, roundedFeelableTemp);
     }
 
     private void saveData(WeatherResponse response, int roundedActualTemp, int roundedFeelableTemp) {
         String todaysDate = DateUtil.getTodaysDate();
         preferencesSingleton.setPrefLastKnownDate(todaysDate);
-        preferencesSingleton.setPrefPictureLocation(response.getCityName());
-        repository.addNewHistoryElement(new WeatherHistory(response.getCityName(), roundedActualTemp, roundedFeelableTemp, todaysDate));
+        preferencesSingleton.setPrefPictureLocation(response.getSubLocalityName());
+        preferencesSingleton.setPrefLastKnownLocation(response.getSubLocalityName());
+        repository.addNewHistoryElement(new WeatherHistory(response.getSubLocalityName(), roundedActualTemp, roundedFeelableTemp, todaysDate));
     }
 
     @Override
