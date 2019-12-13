@@ -14,6 +14,7 @@ import butterknife.ButterKnife;
 import p.kirke.weatherapp.history.HistoryFragment;
 import p.kirke.weatherapp.home.HomeFragment;
 import p.kirke.weatherapp.onboarding.OnBoardingFragment;
+import p.kirke.weatherapp.pushnotification.NotificationHandler;
 import p.kirke.weatherapp.util.Const;
 
 public class MainActivity extends AppCompatActivity {
@@ -32,6 +33,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         createFragmentViewPager();
+        setUpPushNotification();
+    }
+
+    private void setUpPushNotification() {
+        NotificationHandler notification = new NotificationHandler(this);
+        notification.scheduleNotification();
     }
 
     private void createFragmentViewPager() {
@@ -58,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-         // TODO dont save fragments, ask from adapter
+        // TODO dont save fragments, ask from adapter
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (Const.LOCATION_REQUEST_CODE == requestCode) {
             homeFragment.onRequestPermissionsResult(requestCode, permissions, grantResults);

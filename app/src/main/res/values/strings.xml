@@ -10,5 +10,7 @@
     <string name="insert_your_name">Insert your first name</string>
     <string name="save">Save</string>
     <string name="select_avatar">Select avatar</string>
+    <string name="notification_title">Have you checked the weather today?</string>
+    <string name="notification_text">Open the app and find out!</string>
 
 </resources>
