@@ -1,9 +1,7 @@
 package p.kirke.weatherapp.onboarding;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,21 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import p.kirke.weatherapp.MainActivity;
+import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
+import p.kirke.weatherapp.util.Const;
 
 public class OnboardingFragment extends Fragment implements OnboardingView {
 
     @BindView(R.id.name_input_field)
     EditText nameInput;
+
+    private OnboardingPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,58 +38,59 @@ public class OnboardingFragment extends Fragment implements OnboardingView {
     }
 
     @OnClick(R.id.select_avatar)
-    public void onClickSelectAvatar() {
+    void onClickSelectAvatar() {
         String name = nameInput.getText().toString();
+        saveEnteredName(name);
+        startPresenter();
+    }
+
+    private void saveEnteredName(String name) {
         if (!name.isEmpty()) {
             PreferencesSingleton.getSingletonInstance(getContext()).setName(name);
         }
-
-        requestPermission(getActivity());
     }
 
-    private final static int GALLERY_REQUEST_CODE = 234;
-    private final static int READ_EXTERNAL_STORAGE_REQUEST_CODE = 345;
-
-    // TODO niceify
-    private void requestPermission(Activity activity) {
-        if (ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    READ_EXTERNAL_STORAGE_REQUEST_CODE);
-        } else {
-            pickFromGallery();
+    private void startPresenter() {
+        if (presenter == null) {
+            presenter = new OnboardingPresenter(this, PreferencesSingleton.getSingletonInstance(getContext()),
+                    new PermissionHandler(getActivity()));
         }
+        presenter.start();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        //TODO ei saa activityst kätte
-        if (requestCode == READ_EXTERNAL_STORAGE_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            pickFromGallery();
-        }
+        // TODO check result
+        presenter.onRequestPermission(requestCode, permissions, grantResults);
     }
 
-    private void pickFromGallery() {
+    @Override
+    public void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         String[] mimeTypes = {"image/jpeg", "image/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         Activity activity = getActivity();
         if (activity != null) {
-            getActivity().startActivityForResult(intent, GALLERY_REQUEST_CODE);
+            getActivity().startActivityForResult(intent, Const.OPEN_GALLERY_REQUEST_CODE);
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == GALLERY_REQUEST_CODE) {//data.getData return the content URI for the selected Image
+            if (requestCode == Const.OPEN_GALLERY_REQUEST_CODE) {
                 MainActivity activity = ((MainActivity) getActivity());
                 if (activity != null) {
                     Uri selectedImage = data.getData();
                     String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    if (selectedImage == null) return;
+                    if (selectedImage == null) {
+                        return;
+                    }
                     Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                    if (cursor == null) return;
+                    if (cursor == null) {
+                        return;
+                    }
                     cursor.moveToFirst();
                     int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                     String imgDecodableString = cursor.getString(columnIndex);
