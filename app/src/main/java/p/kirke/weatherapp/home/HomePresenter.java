@@ -7,6 +7,7 @@ import p.kirke.weatherapp.db.WeatherHistory;
 import p.kirke.weatherapp.db.WeatherHistoryRepository;
 import p.kirke.weatherapp.http.GetWeatherTask;
 import p.kirke.weatherapp.model.WeatherResponse;
+import p.kirke.weatherapp.util.Const;
 import p.kirke.weatherapp.util.DateUtil;
 
 public class HomePresenter implements DataCallback {
@@ -29,8 +30,20 @@ public class HomePresenter implements DataCallback {
     void start() {
         view.hideError();
         view.showName(preferencesSingleton.getName());
-        view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
+        getUserImage();
         view.showLoading(true);
+        getLocation();
+    }
+
+    private void getUserImage() {
+        if (permissionHandler.hasReadExternalStoragePermission()) {
+            view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
+        } else {
+            permissionHandler.requestReadExternalStoragePermission();
+        }
+    }
+
+    private void getLocation() {
         if (permissionHandler.hasLocationPermission()) {
             locationHandler.getUserLocation(this);
         } else {
@@ -99,11 +112,29 @@ public class HomePresenter implements DataCallback {
     }
 
     void onPermissionResponse(int requestCode, String[] permissions, int[] grantResults) {
-        boolean permissionGranted = permissionHandler.isLocationPermissionGranted(requestCode, permissions, grantResults);
-        if (permissionGranted) {
+        if (requestCode == Const.LOCATION_REQUEST_CODE) {
+            boolean locationPermissionGranted = permissionHandler.isLocationPermissionGranted(requestCode, permissions, grantResults);
+            handleLocationResponse(locationPermissionGranted);
+        } else if (requestCode == Const.READ_EXTERNAL_STORAGE_REQUEST_CODE) {
+            boolean externalStoragePermissionGranted = permissionHandler.isReadExternalStoragePermissionGranted(requestCode, permissions, grantResults);
+            handleExternalStorageResponse(externalStoragePermissionGranted);
+        }
+    }
+
+    private void handleLocationResponse(boolean locationPermissionGranted) {
+        if (locationPermissionGranted) {
             locationHandler.getUserLocation(this);
         } else {
             view.onError(R.string.error_denied_location);
+            view.showLoading(false);
+        }
+    }
+
+    private void handleExternalStorageResponse(boolean externalStoragePermissionGranted) {
+        if (externalStoragePermissionGranted) {
+            view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
+        } else {
+            view.onError(R.string.error_denied_external_storage);
             view.showLoading(false);
         }
     }

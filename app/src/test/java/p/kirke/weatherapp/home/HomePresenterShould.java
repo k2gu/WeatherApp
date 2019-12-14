@@ -17,6 +17,7 @@ import p.kirke.weatherapp.db.WeatherHistory;
 import p.kirke.weatherapp.db.WeatherHistoryRepository;
 import p.kirke.weatherapp.model.WeatherCharacteristics;
 import p.kirke.weatherapp.model.WeatherResponse;
+import p.kirke.weatherapp.util.Const;
 
 import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,7 +70,8 @@ public class HomePresenterShould {
     }
 
     @Test
-    public void display_user_image_on_start() {
+    public void display_user_image_on_start_if_has_external_storage_permission() {
+        given(permissionHandler.hasReadExternalStoragePermission()).willReturn(true);
         given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
 
         presenter.start();
@@ -78,15 +80,25 @@ public class HomePresenterShould {
     }
 
     @Test
+    public void request_external_storage_permission_on_start_if_does_not_have_it() {
+        given(permissionHandler.hasReadExternalStoragePermission()).willReturn(false);
+
+        presenter.start();
+
+        verify(permissionHandler).requestReadExternalStoragePermission();
+    }
+
+    @Test
     public void show_loading_after_showing_picture_and_name_on_start() {
         given(preferencesSingleton.getName()).willReturn(ANY_NAME);
         given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
+        given(permissionHandler.hasReadExternalStoragePermission()).willReturn(true);
 
         presenter.start();
 
         InOrder order = inOrder(view);
-        verify(view).showName(ANY_NAME);
-        verify(view).displayUserImage(ANY_PICTURE_LOCATION);
+        order.verify(view).showName(ANY_NAME);
+        order.verify(view).displayUserImage(ANY_PICTURE_LOCATION);
         order.verify(view).showLoading(true);
     }
 
@@ -187,22 +199,43 @@ public class HomePresenterShould {
 
     @Test
     public void get_user_location_on_permission_response_if_permission_granted() {
-        given(permissionHandler.isLocationPermissionGranted(0, ANY_PERMISSION,
+        given(permissionHandler.isLocationPermissionGranted(Const.LOCATION_REQUEST_CODE, ANY_PERMISSION,
                 ANY_RESULT)).willReturn(true);
 
-        presenter.onPermissionResponse(0, ANY_PERMISSION, ANY_RESULT);
+        presenter.onPermissionResponse(Const.LOCATION_REQUEST_CODE, ANY_PERMISSION, ANY_RESULT);
 
         verify(locationHandler).getUserLocation(presenter);
     }
 
     @Test
     public void notify_view_of_error_if_permission_is_not_granted_on_permission_response() {
-        given(permissionHandler.isLocationPermissionGranted(0, ANY_PERMISSION,
+        given(permissionHandler.isLocationPermissionGranted(Const.LOCATION_REQUEST_CODE, ANY_PERMISSION,
                 ANY_RESULT)).willReturn(false);
 
-        presenter.onPermissionResponse(0, ANY_PERMISSION, ANY_RESULT);
+        presenter.onPermissionResponse(Const.LOCATION_REQUEST_CODE, ANY_PERMISSION, ANY_RESULT);
 
         verify(view).onError(R.string.error_denied_location);
+    }
+
+    @Test
+    public void display_user_image_on_permission_request_if_is_external_permission_response_and_is_successful() {
+        given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
+        given(permissionHandler.isReadExternalStoragePermissionGranted(Const.READ_EXTERNAL_STORAGE_REQUEST_CODE, ANY_PERMISSION,
+                ANY_RESULT)).willReturn(true);
+
+        presenter.onPermissionResponse(Const.READ_EXTERNAL_STORAGE_REQUEST_CODE, ANY_PERMISSION, ANY_RESULT);
+
+        verify(view).displayUserImage(ANY_PICTURE_LOCATION);
+    }
+
+    @Test
+    public void show_error_on_permission_request_if_is_external_permission_response_and_is_not_successful() {
+        given(permissionHandler.isLocationPermissionGranted(Const.READ_EXTERNAL_STORAGE_REQUEST_CODE, ANY_PERMISSION,
+                ANY_RESULT)).willReturn(false);
+
+        presenter.onPermissionResponse(Const.READ_EXTERNAL_STORAGE_REQUEST_CODE, ANY_PERMISSION, ANY_RESULT);
+
+        verify(view).onError(R.string.error_denied_external_storage);
     }
 }
 

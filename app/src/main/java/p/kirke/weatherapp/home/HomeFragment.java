@@ -32,6 +32,7 @@ public class HomeFragment extends Fragment implements HomeView {
     ProgressBar loadingBar;
 
     private HomePresenter presenter;
+    private boolean resumingFromError = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,7 +50,10 @@ public class HomeFragment extends Fragment implements HomeView {
                     new WeatherHistoryRepository(getContext()), new PermissionHandler(getActivity()),
                     new LocationHandler(getActivity()));
         }
-        presenter.start();
+        if (!resumingFromError) {
+            presenter.start();
+        }
+        resumingFromError = false;
     }
 
     @Override
@@ -67,6 +71,7 @@ public class HomeFragment extends Fragment implements HomeView {
         MainActivity activity = (MainActivity) getActivity();
         if (activity != null) {
             activity.showError(message);
+            resumingFromError = true;
         }
     }
 
