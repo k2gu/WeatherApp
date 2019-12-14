@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import p.kirke.weatherapp.MainActivity;
 import p.kirke.weatherapp.R;
 import p.kirke.weatherapp.db.WeatherHistory;
 import p.kirke.weatherapp.db.WeatherHistoryRepository;
@@ -40,6 +41,8 @@ public class HistoryFragment extends Fragment implements HistoryCallback {
         super.onResume();
         if (repository != null) {
             repository.getAllData(this);
+        } else {
+            onError();
         }
     }
 
@@ -51,6 +54,14 @@ public class HistoryFragment extends Fragment implements HistoryCallback {
 
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(new HistoryAdapter(historyList));
+        }
+    }
+
+    @Override
+    public void onError() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            activity.showError(R.string.error_generic);
         }
     }
 }

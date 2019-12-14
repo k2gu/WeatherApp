@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import p.kirke.weatherapp.MainActivity;
 import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
@@ -62,7 +63,11 @@ public class HomeFragment extends Fragment implements HomeView {
     }
 
     @Override
-    public void showError() {
+    public void onError(int message) {
+        MainActivity activity = (MainActivity) getActivity();
+        if(activity != null) {
+            activity.showError(message);
+        }
 
     }
 

@@ -13,4 +13,9 @@ public class HistoryPresenter implements HistoryCallback {
     public void onResponse(List<WeatherHistory> historyList) {
 
     }
+
+    @Override
+    public void onError() {
+
+    }
 }

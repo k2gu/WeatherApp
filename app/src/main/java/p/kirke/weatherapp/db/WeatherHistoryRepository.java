@@ -21,6 +21,7 @@ public class WeatherHistoryRepository {
                 try {
                     callback.onResponse((List<WeatherHistory>) inputMessage.obj);
                 } catch (ClassCastException exception) {
+                    callback.onError();
                     // TODO error
                 }
             }

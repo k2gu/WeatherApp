@@ -64,10 +64,7 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        boolean permissionGranted = requestCode == Const.READ_EXTERNAL_STORAGE_REQUEST_CODE &&
-                permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE) &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED;
-        presenter.onRequestPermissionResponse(permissionGranted);
+        presenter.onRequestPermissionResponse(requestCode, permissions, grantResults);
     }
 
     @Override

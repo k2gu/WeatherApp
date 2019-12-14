@@ -1,12 +1,14 @@
 package p.kirke.weatherapp.home;
 
+import androidx.annotation.NonNull;
+
 import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
+import p.kirke.weatherapp.R;
 import p.kirke.weatherapp.db.WeatherHistory;
 import p.kirke.weatherapp.db.WeatherHistoryRepository;
 import p.kirke.weatherapp.http.GetWeatherTask;
 import p.kirke.weatherapp.model.WeatherResponse;
-import p.kirke.weatherapp.util.Const;
 import p.kirke.weatherapp.util.DateUtil;
 
 public class HomePresenter implements DataCallback {
@@ -66,11 +68,15 @@ public class HomePresenter implements DataCallback {
 
     @Override
     public void onResponse(WeatherResponse response) {
-        int roundedActualTemp = roundDoubleToNearestInt(response.getActualTemperature());
-        int roundedFeelableTemp = roundDoubleToNearestInt(response.getFeelableTemperature());
         view.showLoading(false);
-        view.showWeatherData(response.getSubLocalityName(), roundedActualTemp, roundedFeelableTemp);
-        saveData(response, roundedActualTemp, roundedFeelableTemp);
+        if (response == null) {
+            view.onError(R.string.error_generic);
+        } else {
+            int roundedActualTemp = roundDoubleToNearestInt(response.getActualTemperature());
+            int roundedFeelableTemp = roundDoubleToNearestInt(response.getFeelableTemperature());
+            view.showWeatherData(response.getSubLocalityName(), roundedActualTemp, roundedFeelableTemp);
+            saveData(response, roundedActualTemp, roundedFeelableTemp);
+        }
     }
 
     private void saveData(WeatherResponse response, int roundedActualTemp, int roundedFeelableTemp) {
@@ -91,13 +97,16 @@ public class HomePresenter implements DataCallback {
 
     @Override
     public void onError() {
-        view.showError();
+        view.onError(R.string.error_generic);
     }
 
-    void onPermissionResponse(int requestCode, String[] permissions, int[] grantResults) {
-        // TODO what if cancelled?
-        if (requestCode == Const.LOCATION_REQUEST_CODE) {
+    void onPermissionResponse(int requestCode, @NonNull String[] permissions,
+                              @NonNull int[] grantResults) {
+        boolean permissionGranted = permissionHandler.isLocationPermissionGranted(requestCode, permissions, grantResults);
+        if (permissionGranted) {
             locationManager.getUserLocation(this);
+        } else {
+            view.onError(R.string.error_denied_location);
         }
     }
 }

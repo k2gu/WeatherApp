@@ -7,4 +7,6 @@ import p.kirke.weatherapp.db.WeatherHistory;
 public interface HistoryCallback {
 
     void onResponse(List<WeatherHistory> historyList);
+
+    void onError();
 }

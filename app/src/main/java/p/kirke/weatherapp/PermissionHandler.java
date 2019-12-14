@@ -41,4 +41,16 @@ public class PermissionHandler {
     private void requestPermission(String[] permissions, int requestCode) {
         ActivityCompat.requestPermissions(activity, permissions, requestCode);
     }
+
+    public boolean isLocationPermissionGranted(int requestCode, String[] permissions, int[] grantResults) {
+        //TODO
+        boolean isLocation = permissions[0].equals(Manifest.permission.ACCESS_COARSE_LOCATION) || permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION);
+        return requestCode == Const.LOCATION_REQUEST_CODE && isLocation &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public boolean isReadExternalStoragePermissionGranted(int requestCode, String[] permissions, int[] grantResults) {
+        return requestCode == Const.READ_EXTERNAL_STORAGE_REQUEST_CODE && permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE) &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED;
+    }
 }
