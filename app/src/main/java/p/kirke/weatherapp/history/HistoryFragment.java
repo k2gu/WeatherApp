@@ -44,7 +44,6 @@ public class HistoryFragment extends Fragment implements HistoryView {
             presenter = new HistoryPresenter(this, repository);
         }
         presenter.start();
-
     }
 
     @Override
@@ -63,6 +62,14 @@ public class HistoryFragment extends Fragment implements HistoryView {
         MainActivity activity = (MainActivity) getActivity();
         if (activity != null) {
             activity.showError(message);
+        }
+    }
+
+    @Override
+    public void hideError() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            activity.hideError();
         }
     }
 }

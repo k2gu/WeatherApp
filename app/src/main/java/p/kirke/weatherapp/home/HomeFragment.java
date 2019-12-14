@@ -65,10 +65,17 @@ public class HomeFragment extends Fragment implements HomeView {
     @Override
     public void onError(int message) {
         MainActivity activity = (MainActivity) getActivity();
-        if(activity != null) {
+        if (activity != null) {
             activity.showError(message);
         }
+    }
 
+    @Override
+    public void hideError() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            activity.hideError();
+        }
     }
 
     @Override

@@ -1,7 +1,5 @@
 package p.kirke.weatherapp.onboarding;
 
-import androidx.annotation.NonNull;
-
 import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
@@ -19,6 +17,7 @@ class OnBoardingPresenter {
     }
 
     void start(String name) {
+        view.hideError();
         if (name != null && !name.isEmpty()) {
             preferencesSingleton.setName(name.trim());
             getPermissionsAndOpenGallery();

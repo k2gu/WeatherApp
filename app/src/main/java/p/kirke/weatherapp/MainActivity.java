@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -14,6 +15,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import p.kirke.weatherapp.home.HomeFragment;
 import p.kirke.weatherapp.onboarding.OnBoardingFragment;
 import p.kirke.weatherapp.pushnotification.NotificationHandler;
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     public ViewPager viewPager;
     @BindView(R.id.tab_layout)
     public TabLayout tabLayout;
+    @BindView(R.id.error_container)
+    ConstraintLayout errorContainer;
     @BindView(R.id.error_message)
     TextView errorMessage;
 
@@ -67,12 +71,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showError(int message) {
-        errorMessage.setVisibility(View.VISIBLE);
+        errorContainer.setVisibility(View.VISIBLE);
         errorMessage.setText(message);
     }
 
     public void hideError() {
-        errorMessage.setVisibility(View.GONE);
+        errorContainer.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.button_close)
+    public void onClickErrorClose() {
+        errorContainer.setVisibility(View.GONE);
     }
 
     @Override

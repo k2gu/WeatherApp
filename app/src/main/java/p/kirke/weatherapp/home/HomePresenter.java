@@ -27,6 +27,7 @@ public class HomePresenter implements DataCallback {
     }
 
     void start() {
+        view.hideError();
         view.showName(preferencesSingleton.getName());
         view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
         view.showLoading(true);
@@ -103,6 +104,7 @@ public class HomePresenter implements DataCallback {
             locationHandler.getUserLocation(this);
         } else {
             view.onError(R.string.error_denied_location);
+            view.showLoading(false);
         }
     }
 }

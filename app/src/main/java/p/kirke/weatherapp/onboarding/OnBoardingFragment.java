@@ -97,6 +97,14 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
         }
     }
 
+    @Override
+    public void hideError() {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null) {
+            activity.hideError();
+        }
+    }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO
         if (resultCode == Activity.RESULT_OK && requestCode == Const.OPEN_GALLERY_REQUEST_CODE) {
