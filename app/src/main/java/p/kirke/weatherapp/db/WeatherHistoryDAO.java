@@ -13,6 +13,4 @@ public interface WeatherHistoryDAO {
 
     @Insert
     void insertWeatherHistory(WeatherHistory history);
-
-
 }
