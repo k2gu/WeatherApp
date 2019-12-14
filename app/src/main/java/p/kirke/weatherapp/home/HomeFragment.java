@@ -1,5 +1,6 @@
 package p.kirke.weatherapp.home;
 
+import android.app.Activity;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -93,6 +94,14 @@ public class HomeFragment extends Fragment implements HomeView {
     public void displayUserImage(String image) {
         //TODO save image
         userAvatar.setImageBitmap(BitmapFactory.decodeFile(image));
+    }
+
+    @Override
+    public void showImagePlaceholder() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            userAvatar.setImageDrawable(getResources().getDrawable(R.drawable.ic_user, activity.getTheme()));
+        }
     }
 
     @Override

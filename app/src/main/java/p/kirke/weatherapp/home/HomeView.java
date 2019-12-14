@@ -11,4 +11,6 @@ interface HomeView extends ErrorHandlingView {
     void showLoading(boolean showLoading);
 
     void displayUserImage(String image);
+
+    void showImagePlaceholder();
 }

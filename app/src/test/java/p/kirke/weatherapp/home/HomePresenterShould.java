@@ -237,5 +237,15 @@ public class HomePresenterShould {
 
         verify(view).onError(R.string.error_denied_external_storage);
     }
+
+    @Test
+    public void show_image_placeholder_if_is_external_permission_response_and_is_not_successful() {
+        given(permissionHandler.isLocationPermissionGranted(Const.READ_EXTERNAL_STORAGE_REQUEST_CODE, ANY_PERMISSION,
+                ANY_RESULT)).willReturn(false);
+
+        presenter.onPermissionResponse(Const.READ_EXTERNAL_STORAGE_REQUEST_CODE, ANY_PERMISSION, ANY_RESULT);
+
+        verify(view).showImagePlaceholder();
+    }
 }
 

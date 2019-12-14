@@ -134,6 +134,7 @@ public class HomePresenter implements DataCallback {
         if (externalStoragePermissionGranted) {
             view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
         } else {
+            view.showImagePlaceholder();
             view.onError(R.string.error_denied_external_storage);
             view.showLoading(false);
         }
