@@ -48,7 +48,7 @@ public class HistoryPresenter_should {
     }
 
     @Test
-    public void pass_list_from_response_to_view_on_response_if_response_is_not_null() {
+    public void pass_list_from_response_to_view_on_response_if_response_is_not_null_nor_empty() {
         List<WeatherHistory> historyList = new ArrayList<>();
         historyList.add(new WeatherHistory(ANY_NAME, ANY_TEMP, ANY_FEELABLE_TEMP, ANY_DATE));
 
@@ -58,12 +58,31 @@ public class HistoryPresenter_should {
     }
 
     @Test
-    public void show_error_if_response_is_null_on_response() {
+    public void hide_no_info_message_on_response_if_response_is_not_null_nor_empty() {
+        List<WeatherHistory> historyList = new ArrayList<>();
+        historyList.add(new WeatherHistory(ANY_NAME, ANY_TEMP, ANY_FEELABLE_TEMP, ANY_DATE));
+
+        presenter.onResponse(historyList);
+
+        verify(view).hideNoInfoYetMessage();
+    }
+
+    @Test
+    public void show_no_info_message_if_response_is_null_on_response() {
         // nothing to prepare
 
         presenter.onResponse(null);
 
-        verify(view).onError(R.string.error_generic);
+        verify(view).showNoInfoYetMessage();
+    }
+
+    @Test
+    public void show_no_info_message_if_response_is_empty_on_response() {
+        // nothing to prepare
+
+        presenter.onResponse(new ArrayList<>());
+
+        verify(view).showNoInfoYetMessage();
     }
 
     @Test

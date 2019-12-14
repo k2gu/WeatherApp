@@ -22,10 +22,11 @@ public class HistoryPresenter implements HistoryCallback {
 
     @Override
     public void onResponse(List<WeatherHistory> historyList) {
-        if (historyList != null) {
+        if (historyList != null && historyList.size() > 0) {
+            view.hideNoInfoYetMessage();
             view.showList(historyList);
         } else {
-            view.onError(R.string.error_generic);
+            view.showNoInfoYetMessage();
         }
     }
 

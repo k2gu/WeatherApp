@@ -20,5 +20,6 @@
     <string name="error_denied_external_storage">Did you press cancel on external storage permission request?</string>
     <string name="error_no_name_inserted">Please enter your name before continuing</string>
     <string name="error_image_selection_cancelled">Please select an image to continue</string>
+    <string name="no_info_yet">You have no weather info history yet</string>
 
 </resources>

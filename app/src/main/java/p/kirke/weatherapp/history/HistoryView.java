@@ -8,4 +8,8 @@ import p.kirke.weatherapp.db.WeatherHistory;
 public interface HistoryView extends ErrorHandlingView {
 
     void showList(List<WeatherHistory> historyList);
+
+    void showNoInfoYetMessage();
+
+    void hideNoInfoYetMessage();
 }
