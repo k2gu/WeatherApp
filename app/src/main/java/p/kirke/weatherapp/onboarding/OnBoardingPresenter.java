@@ -19,7 +19,7 @@ class OnBoardingPresenter {
     }
 
     void start(String name) {
-        if (!name.isEmpty()) {
+        if (name != null && !name.isEmpty()) {
             preferencesSingleton.setName(name.trim());
             getPermissionsAndOpenGallery();
         } else {
@@ -35,7 +35,7 @@ class OnBoardingPresenter {
         }
     }
 
-    void onRequestPermissionResponse(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    void onRequestPermissionResponse(int requestCode, String[] permissions, int[] grantResults) {
         if (permissionHandler.isReadExternalStoragePermissionGranted(requestCode, permissions, grantResults)) {
             view.openGallery();
         } else {

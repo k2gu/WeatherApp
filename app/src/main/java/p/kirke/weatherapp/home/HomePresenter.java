@@ -1,7 +1,5 @@
 package p.kirke.weatherapp.home;
 
-import androidx.annotation.NonNull;
-
 import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
@@ -17,15 +15,15 @@ public class HomePresenter implements DataCallback {
     private PreferencesSingleton preferencesSingleton;
     private WeatherHistoryRepository repository;
     private PermissionHandler permissionHandler;
-    private LocationHandler locationManager;
+    private LocationHandler locationHandler;
 
     HomePresenter(HomeView view, PreferencesSingleton preferencesSingleton, WeatherHistoryRepository repository,
-                  PermissionHandler permissionHandler, LocationHandler locationManager) {
+                  PermissionHandler permissionHandler, LocationHandler locationHandler) {
         this.view = view;
         this.preferencesSingleton = preferencesSingleton;
         this.repository = repository;
         this.permissionHandler = permissionHandler;
-        this.locationManager = locationManager;
+        this.locationHandler = locationHandler;
     }
 
     void start() {
@@ -33,7 +31,7 @@ public class HomePresenter implements DataCallback {
         view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
         view.showLoading(true);
         if (permissionHandler.hasLocationPermission()) {
-            locationManager.getUserLocation(this);
+            locationHandler.getUserLocation(this);
         } else {
             permissionHandler.requestLocationPermissions();
         }
@@ -45,7 +43,6 @@ public class HomePresenter implements DataCallback {
             executeRequest(latitude, longitude);
         } else {
             view.showLoading(false);
-            view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
         }
     }
 
@@ -56,7 +53,7 @@ public class HomePresenter implements DataCallback {
 
     private boolean isInSameLocation(double latitude, double longitude) {
         String lastKnownLocation = preferencesSingleton.getPrefLastKnownLocation();
-        String currentLocation = locationManager.getSubLocalityFromCoordinates(latitude, longitude);
+        String currentLocation = locationHandler.getSubLocalityFromCoordinates(latitude, longitude);
         //return lastKnownLocation.equals(currentLocation);
         return false;
     }
@@ -79,6 +76,10 @@ public class HomePresenter implements DataCallback {
         }
     }
 
+    private int roundDoubleToNearestInt(double doubleToRound) {
+        return (int) Math.round(doubleToRound);
+    }
+
     private void saveData(WeatherResponse response, int roundedActualTemp, int roundedFeelableTemp) {
         String todaysDate = DateUtil.getTodaysDate();
         preferencesSingleton.setPrefLastKnownDate(todaysDate);
@@ -91,20 +92,15 @@ public class HomePresenter implements DataCallback {
         view.displayUserImage(image);
     }
 
-    private int roundDoubleToNearestInt(double doubleToRound) {
-        return (int) Math.round(doubleToRound);
-    }
-
     @Override
     public void onError() {
         view.onError(R.string.error_generic);
     }
 
-    void onPermissionResponse(int requestCode, @NonNull String[] permissions,
-                              @NonNull int[] grantResults) {
+    void onPermissionResponse(int requestCode, String[] permissions, int[] grantResults) {
         boolean permissionGranted = permissionHandler.isLocationPermissionGranted(requestCode, permissions, grantResults);
         if (permissionGranted) {
-            locationManager.getUserLocation(this);
+            locationHandler.getUserLocation(this);
         } else {
             view.onError(R.string.error_denied_location);
         }

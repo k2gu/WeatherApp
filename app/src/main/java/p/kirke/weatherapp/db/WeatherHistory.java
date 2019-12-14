@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity
 public class WeatherHistory {
 
+    // TODO private?
     @PrimaryKey(autoGenerate = true)
     public int id;
 

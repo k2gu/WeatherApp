@@ -1,6 +1,11 @@
 package p.kirke.weatherapp.history;
 
-public interface HistoryView {
+import java.util.List;
 
+import p.kirke.weatherapp.ErrorHandlingView;
+import p.kirke.weatherapp.db.WeatherHistory;
 
+public interface HistoryView extends ErrorHandlingView {
+
+    void showList(List<WeatherHistory> historyList);
 }

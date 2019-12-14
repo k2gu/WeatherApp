@@ -14,7 +14,7 @@ public class WeatherHistoryRepository {
     private WeatherDB db;
     private HistoryCallback callback;
 
-    private Handler handler = new Handler(Looper.getMainLooper()) {
+    private final Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message inputMessage) {
             if (inputMessage.what == 210) {
@@ -22,7 +22,6 @@ public class WeatherHistoryRepository {
                     callback.onResponse((List<WeatherHistory>) inputMessage.obj);
                 } catch (ClassCastException exception) {
                     callback.onError();
-                    // TODO error
                 }
             }
         }

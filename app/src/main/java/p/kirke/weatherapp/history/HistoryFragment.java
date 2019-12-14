@@ -18,9 +18,10 @@ import p.kirke.weatherapp.R;
 import p.kirke.weatherapp.db.WeatherHistory;
 import p.kirke.weatherapp.db.WeatherHistoryRepository;
 
-public class HistoryFragment extends Fragment implements HistoryCallback {
+public class HistoryFragment extends Fragment implements HistoryView {
 
     private WeatherHistoryRepository repository;
+    private HistoryPresenter presenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,29 +40,29 @@ public class HistoryFragment extends Fragment implements HistoryCallback {
     @Override
     public void onResume() {
         super.onResume();
-        if (repository != null) {
-            repository.getAllData(this);
-        } else {
-            onError();
+        if (presenter == null) {
+            presenter = new HistoryPresenter(this, repository);
         }
+        presenter.start();
+
     }
 
     @Override
-    public void onResponse(List<WeatherHistory> historyList) {
-        //TODO
+    public void showList(List<WeatherHistory> historyList) {
         RecyclerView recyclerView = ((RecyclerView) getView());
         if (recyclerView != null) {
-
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(new HistoryAdapter(historyList));
+        } else {
+            onError(R.string.error_generic);
         }
     }
 
     @Override
-    public void onError() {
+    public void onError(int message) {
         MainActivity activity = (MainActivity) getActivity();
         if (activity != null) {
-            activity.showError(R.string.error_generic);
+            activity.showError(message);
         }
     }
 }
