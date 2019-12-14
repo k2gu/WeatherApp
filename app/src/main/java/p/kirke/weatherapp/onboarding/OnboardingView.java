@@ -1,6 +1,8 @@
 package p.kirke.weatherapp.onboarding;
 
-public interface OnboardingView {
+import p.kirke.weatherapp.ErrorHandlingView;
+
+public interface OnboardingView extends ErrorHandlingView {
 
     void openGallery();
 

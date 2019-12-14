@@ -2,6 +2,8 @@ package p.kirke.weatherapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     public ViewPager viewPager;
     @BindView(R.id.tab_layout)
     public TabLayout tabLayout;
+    @BindView(R.id.error_message)
+    TextView errorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,15 @@ public class MainActivity extends AppCompatActivity {
         if (adapter != null) {
             adapter.replaceFragmentOnboarding();
         }
+    }
+
+    public void showError(int message) {
+        errorMessage.setVisibility(View.VISIBLE);
+        errorMessage.setText(message);
+    }
+
+    public void hideError() {
+        errorMessage.setVisibility(View.GONE);
     }
 
     @Override

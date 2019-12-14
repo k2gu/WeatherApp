@@ -1,7 +1,9 @@
 package p.kirke.weatherapp.onboarding;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import butterknife.BindView;
@@ -40,28 +43,31 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
     @OnClick(R.id.select_avatar)
     void onClickSelectAvatar() {
         String name = nameInput.getText().toString();
-        saveEnteredName(name);
-        startPresenter();
+        startPresenter(name);
     }
 
-    private void saveEnteredName(String name) {
-        if (!name.isEmpty()) {
-            PreferencesSingleton.getSingletonInstance(getContext()).setName(name.trim());
-        }
-    }
-
-    private void startPresenter() {
+    private void startPresenter(String name) {
         if (presenter == null) {
             presenter = new OnBoardingPresenter(this, PreferencesSingleton.getSingletonInstance(getContext()),
                     new PermissionHandler(getActivity()));
         }
-        presenter.start();
+        presenter.start(name);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        // TODO check result
-        presenter.onRequestPermission(requestCode, permissions, grantResults);
+    public void onError(int message) {
+        MainActivity activity = (MainActivity) getActivity();
+        if (activity != null && isVisible()) { // Todo kas läheb ka teise tabi?
+            activity.showError(message);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        boolean permissionGranted = requestCode == Const.READ_EXTERNAL_STORAGE_REQUEST_CODE &&
+                permissions[0].equals(Manifest.permission.READ_EXTERNAL_STORAGE) &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED;
+        presenter.onRequestPermissionResponse(permissionGranted);
     }
 
     @Override
@@ -96,26 +102,26 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // TODO
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == Const.OPEN_GALLERY_REQUEST_CODE) {
-                MainActivity activity = ((MainActivity) getActivity());
-                if (activity != null) {
-                    Uri selectedImage = data.getData();
-                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                    if (selectedImage == null) {
-                        return;
-                    }
-                    Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                    if (cursor == null) {
-                        return;
-                    }
-                    cursor.moveToFirst();
-                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                    String imgDecodableString = cursor.getString(columnIndex);
-                    cursor.close();
-                    presenter.onImageResponse(imgDecodableString);
+        if (resultCode == Activity.RESULT_OK && requestCode == Const.OPEN_GALLERY_REQUEST_CODE) {
+            MainActivity activity = ((MainActivity) getActivity());
+            if (activity != null) {
+                Uri selectedImage = data.getData();
+                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                if (selectedImage == null) {
+                    return;
                 }
+                Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                if (cursor == null) {
+                    return;
+                }
+                cursor.moveToFirst();
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                String imgDecodableString = cursor.getString(columnIndex);
+                cursor.close();
+                presenter.onImageResponse(imgDecodableString);
             }
+        } else {
+            presenter.onImageSelectionCancelled();
         }
     }
 }

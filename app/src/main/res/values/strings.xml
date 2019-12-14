@@ -14,4 +14,11 @@
     <string name="notification_text">Open the app and find out!</string>
     <string name="feelable_temperature">Feels like</string>
 
+
+    <string name="error_generic">Something went wrong! Please try again.</string>
+    <string name="error_denied_location">Did you press cancel on location request?</string>
+    <string name="error_denied_external_storage">Did you press cancel on external storage permission request?</string>
+    <string name="error_no_name_inserted">Please enter your name before continuing</string>
+    <string name="error_image_selection_cancelled">Please select an image to continue</string>
+
 </resources>
