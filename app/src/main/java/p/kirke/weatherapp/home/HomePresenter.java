@@ -82,7 +82,7 @@ public class HomePresenter implements DataCallback {
     }
 
     @Override
-    public void onResponse(WeatherResponse response) {
+    public void onResponse(WeatherResponse response, boolean isCahce) {
         view.showLoading(false);
         if (response == null) {
             view.onError(R.string.error_generic);
@@ -90,7 +90,9 @@ public class HomePresenter implements DataCallback {
             int roundedActualTemp = roundDoubleToNearestInt(response.getActualTemperature());
             int roundedFeelableTemp = roundDoubleToNearestInt(response.getFeelableTemperature());
             view.showWeatherData(response.getSubLocalityName(), roundedActualTemp, roundedFeelableTemp);
-            saveData(response, roundedActualTemp, roundedFeelableTemp);
+            if (!isCahce) {
+                saveData(response, roundedActualTemp, roundedFeelableTemp);
+            }
         }
     }
 

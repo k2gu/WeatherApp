@@ -53,6 +53,6 @@ public class GetWeatherTask extends AsyncTask<String, String, String> {
 
         Gson gson = new Gson();
         WeatherResponse weatherResponse = gson.fromJson(response, WeatherResponse.class);
-        callback.onResponse(weatherResponse);
+        callback.onResponse(weatherResponse, false);
     }
 }

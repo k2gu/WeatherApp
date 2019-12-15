@@ -19,11 +19,11 @@ public class WeatherResponse {
     }
 
     public double getActualTemperature() {
-        return mainCharacteristics.temp;
+        return mainCharacteristics.temperature;
     }
 
     public double getFeelableTemperature() {
-        return mainCharacteristics.feels_like;
+        return mainCharacteristics.feelsLike;
     }
 
     public String getSubLocalityName() {

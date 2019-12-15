@@ -141,10 +141,19 @@ public class HomePresenterShould {
     }
 
     @Test
-    public void hide_loading_on_data_response() {
+    public void hide_loading_on_data_response_if_is_cache() {
         // nothing to prepare
 
-        presenter.onResponse(any());
+        presenter.onResponse(null, true);
+
+        verify(view).showLoading(false);
+    }
+
+    @Test
+    public void hide_loading_on_data_response_if_is_not_cache() {
+        // nothing to prepare
+
+        presenter.onResponse(null, false);
 
         verify(view).showLoading(false);
     }
@@ -153,7 +162,7 @@ public class HomePresenterShould {
     public void show_error_on_data_response_if_response_is_null() {
         // nothing to prepare
 
-        presenter.onResponse(null);
+        presenter.onResponse(null, true);
 
         verify(view).onError(R.string.error_generic);
     }
@@ -162,7 +171,7 @@ public class HomePresenterShould {
     public void notify_view_of_response_on_data_response_if_response_is_valid() {
         // nothing to prepare
 
-        presenter.onResponse(getValidResponse());
+        presenter.onResponse(getValidResponse(), true);
 
         verify(view).showWeatherData(ANY_NAME, ANY_TEMP, ANY_FEELABLE_TEMP);
     }
@@ -175,7 +184,7 @@ public class HomePresenterShould {
     public void save_data_to_preferences_singleton_on_response_if_response_is_valid() {
         // nothing to prepare
 
-        presenter.onResponse(getValidResponse());
+        presenter.onResponse(getValidResponse(), false);
 
         verify(preferencesSingleton).setPrefLastKnownDate(any());
         verify(preferencesSingleton).setPrefLastKnownLocation(ANY_NAME);
@@ -185,13 +194,32 @@ public class HomePresenterShould {
     public void save_data_to_local_database_on_response_if_response_is_valid() {
         // nothing to prepare
 
-        presenter.onResponse(getValidResponse());
+        presenter.onResponse(getValidResponse(), false);
 
         verify(repository).addNewHistoryElement(weatherHistoryCaptor.capture());
         WeatherHistory capturedValue = weatherHistoryCaptor.getValue();
         assertThat(capturedValue.subLocality).isEqualTo(ANY_NAME);
         assertThat(capturedValue.feelableTemperature).isEqualTo(ANY_FEELABLE_TEMP);
         assertThat(capturedValue.temperature).isEqualTo(ANY_TEMP);
+    }
+
+    @Test
+    public void not_save_data_to_preferences_singleton_on_response_if_response_is_valid_but_is_cache() {
+        // nothing to prepare
+
+        presenter.onResponse(getValidResponse(), true);
+
+        verify(preferencesSingleton, never()).setPrefLastKnownDate(any());
+        verify(preferencesSingleton, never()).setPrefLastKnownLocation(ANY_NAME);
+    }
+
+    @Test
+    public void not_save_data_to_local_database_on_response_if_response_is_valid_but_is_cache() {
+        // nothing to prepare
+
+        presenter.onResponse(getValidResponse(), true);
+
+        verify(repository, never()).addNewHistoryElement(weatherHistoryCaptor.capture());
     }
 
     @Test

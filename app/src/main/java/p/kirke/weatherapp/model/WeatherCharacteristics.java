@@ -1,12 +1,19 @@
 package p.kirke.weatherapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class WeatherCharacteristics {
 
-    double temp;
-    double feels_like;
+    @SerializedName("temperature")
+    double temperature;
+    @SerializedName("feels_like")
+    double feelsLike;
 
-    public WeatherCharacteristics(double temp, double feels_like) {
-        this.temp = temp;
-        this.feels_like = feels_like;
+    public WeatherCharacteristics(double temperature, double feelsLike) {
+        this.temperature = temperature;
+        this.feelsLike = feelsLike;
+    }
+
+    public WeatherCharacteristics() {
     }
 }

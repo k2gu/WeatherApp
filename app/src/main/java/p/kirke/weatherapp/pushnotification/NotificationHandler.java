@@ -16,15 +16,6 @@ import p.kirke.weatherapp.util.Const;
 
 public class NotificationHandler {
 
-    private static NotificationHandler notificationHandler;
-
-    public static NotificationHandler getInstance() {
-        if (notificationHandler == null) {
-            notificationHandler = new NotificationHandler();
-        }
-        return notificationHandler;
-    }
-
     public void scheduleNotification(Context context) {
         Intent notificationIntent = new Intent(context, NotificationReceiver.class);
         notificationIntent.putExtra(Const.NOTIFICATION_ID, 1);

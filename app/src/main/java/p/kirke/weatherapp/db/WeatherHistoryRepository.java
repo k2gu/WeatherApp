@@ -36,7 +36,7 @@ public class WeatherHistoryRepository {
             WeatherHistory historyEntry = db.weatherHistoryDAO().getLastElement();
             WeatherResponse response = new WeatherResponse(new WeatherCharacteristics(
                     historyEntry.temperature, historyEntry.feelableTemperature), historyEntry.subLocality);
-            threadHandler.runOnUi(() -> callback.onResponse(response));
+            threadHandler.runOnUi(() -> callback.onResponse(response, true));
         });
     }
 }

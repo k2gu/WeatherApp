@@ -10,7 +10,7 @@ public class Const {
 
     public static String NOTIFICATION_CHANNEL_ID = "notificationChannelId";
     public static String NOTIFICATION_CHANNEL_NAME = "notificationChannelName";
-    public static String NOTIFICATION_ID = "notification-id";
+    public static String NOTIFICATION_ID = "notificationId";
     public static String NOTIFICATION = "notification";
 
 }
