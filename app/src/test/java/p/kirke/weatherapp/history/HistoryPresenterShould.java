@@ -16,7 +16,7 @@ import p.kirke.weatherapp.db.WeatherHistoryRepository;
 
 import static org.mockito.Mockito.verify;
 
-public class HistoryPresenter_should {
+public class HistoryPresenterShould {
 
     @Rule
     public MockitoRule rule = MockitoJUnit.rule();
