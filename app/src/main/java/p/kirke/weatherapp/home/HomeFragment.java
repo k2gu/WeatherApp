@@ -1,7 +1,10 @@
 package p.kirke.weatherapp.home;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,9 +55,22 @@ public class HomeFragment extends Fragment implements HomeView {
                     new LocationHandler(getActivity()));
         }
         if (!resumingFromError) {
-            presenter.start();
+            presenter.start(hasNetworkConnection());
         }
         resumingFromError = false;
+    }
+
+    private boolean hasNetworkConnection() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().
+                    getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager != null) {
+                NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+                return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+            }
+        }
+        return false;
     }
 
     @Override

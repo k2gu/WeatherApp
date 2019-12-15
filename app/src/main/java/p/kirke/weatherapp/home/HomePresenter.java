@@ -27,12 +27,17 @@ public class HomePresenter implements DataCallback {
         this.locationHandler = locationHandler;
     }
 
-    void start() {
+    void start(boolean hasNetworkConnection) {
         view.hideError();
         view.showName(preferencesSingleton.getName());
         getUserImage();
-        view.showLoading(true);
-        getLocation();
+
+        if (hasNetworkConnection) {
+            view.showLoading(true);
+            getLocation();
+        } else {
+            view.onError(R.string.error_no_internet);
+        }
     }
 
     private void getUserImage() {
@@ -66,6 +71,7 @@ public class HomePresenter implements DataCallback {
     }
 
     private boolean isInSameLocation(double latitude, double longitude) {
+        //TODO
         String lastKnownLocation = preferencesSingleton.getPrefLastKnownLocation();
         String currentLocation = locationHandler.getSubLocalityFromCoordinates(latitude, longitude);
         //return lastKnownLocation.equals(currentLocation);

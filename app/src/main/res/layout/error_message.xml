@@ -18,9 +18,10 @@
 
     <ImageView
         android:id="@+id/button_close"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:src="@android:drawable/ic_delete"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="@dimen/default_padding"
+        android:src="@drawable/ic_cancel"
         android:tint="@color/grey25"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

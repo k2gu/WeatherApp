@@ -23,6 +23,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 public class HomePresenterShould {
@@ -64,7 +65,7 @@ public class HomePresenterShould {
     public void show_name_on_start() {
         given(preferencesSingleton.getName()).willReturn(ANY_NAME);
 
-        presenter.start();
+        presenter.start(true);
 
         verify(view).showName(ANY_NAME);
     }
@@ -74,7 +75,7 @@ public class HomePresenterShould {
         given(permissionHandler.hasReadExternalStoragePermission()).willReturn(true);
         given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
 
-        presenter.start();
+        presenter.start(true);
 
         verify(view).displayUserImage(ANY_PICTURE_LOCATION);
     }
@@ -83,7 +84,7 @@ public class HomePresenterShould {
     public void request_external_storage_permission_on_start_if_does_not_have_it() {
         given(permissionHandler.hasReadExternalStoragePermission()).willReturn(false);
 
-        presenter.start();
+        presenter.start(true);
 
         verify(permissionHandler).requestReadExternalStoragePermission();
     }
@@ -94,7 +95,7 @@ public class HomePresenterShould {
         given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
         given(permissionHandler.hasReadExternalStoragePermission()).willReturn(true);
 
-        presenter.start();
+        presenter.start(true);
 
         InOrder order = inOrder(view);
         order.verify(view).showName(ANY_NAME);
@@ -103,10 +104,29 @@ public class HomePresenterShould {
     }
 
     @Test
+    public void not_show_loading_on_start_if_no_internet_connection() {
+        given(preferencesSingleton.getName()).willReturn(ANY_NAME);
+        given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
+
+        presenter.start(false);
+
+        verify(view, never()).showLoading(true);
+    }
+
+    @Test
+    public void show_error_on_start_if_no_internet_connection() {
+        // nothing to prepare
+
+        presenter.start(false);
+
+        verify(view).onError(R.string.error_no_internet);
+    }
+
+    @Test
     public void get_user_location_if_has_permissions_on_start() {
         given(permissionHandler.hasLocationPermission()).willReturn(true);
 
-        presenter.start();
+        presenter.start(true);
 
         verify(locationHandler).getUserLocation(presenter);
     }
@@ -115,7 +135,7 @@ public class HomePresenterShould {
     public void request_location_permission_if_does_not_have_permissions_on_start() {
         given(permissionHandler.hasLocationPermission()).willReturn(false);
 
-        presenter.start();
+        presenter.start(true);
 
         verify(permissionHandler).requestLocationPermissions();
     }
