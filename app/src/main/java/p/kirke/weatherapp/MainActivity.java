@@ -9,13 +9,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import p.kirke.weatherapp.customviews.LockableViewPager;
 import p.kirke.weatherapp.home.HomeFragment;
 import p.kirke.weatherapp.onboarding.OnBoardingFragment;
 import p.kirke.weatherapp.pushnotification.NotificationHandler;
@@ -23,7 +23,7 @@ import p.kirke.weatherapp.pushnotification.NotificationHandler;
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.fragment_container)
-    public ViewPager viewPager;
+    public LockableViewPager viewPager;
     @BindView(R.id.tab_layout)
     public TabLayout tabLayout;
     @BindView(R.id.error_container)
@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
 
     private TabAdapter getTabAdapterWithFragments() {
         boolean hasUserData = PreferencesSingleton.getSingletonInstance(getBaseContext()).hasUserData();
+        tabLayout.setVisibility(hasUserData ? View.VISIBLE : View.GONE);
+        viewPager.setSwipeable(hasUserData);
         return new TabAdapter(getSupportFragmentManager(), hasUserData, getTabTitles());
     }
 
@@ -67,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         TabAdapter adapter = (TabAdapter) viewPager.getAdapter();
         if (adapter != null) {
             adapter.replaceFragmentOnboarding();
+            tabLayout.setVisibility(View.VISIBLE);
+            viewPager.setSwipeable(true);
         }
     }
 
