@@ -2,6 +2,7 @@ package p.kirke.weatherapp.db;
 
 import android.content.Context;
 
+import java.util.Collections;
 import java.util.List;
 
 import p.kirke.weatherapp.ThreadHandler;
@@ -20,6 +21,8 @@ public class WeatherHistoryRepository {
     public void getAllData(HistoryCallback callback) {
         threadHandler.runOnBackground(() -> {
             List<WeatherHistory> historyList = db.weatherHistoryDAO().getAll();
+            Collections.reverse(historyList);
+            historyList.remove(0);
             threadHandler.runOnUi(() -> callback.onResponse(historyList));
         });
     }
