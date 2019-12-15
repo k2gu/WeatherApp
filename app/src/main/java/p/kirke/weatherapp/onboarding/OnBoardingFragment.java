@@ -14,6 +14,8 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -67,19 +69,10 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
 
     @Override
     public void openGallery() {
-        // TODO
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickPhoto.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(pickPhoto, Const.OPEN_GALLERY_REQUEST_CODE);
-        /*Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
-        Activity activity = getActivity();
-        if (activity != null) {
-            getActivity().startActivityForResult(intent, Const.OPEN_GALLERY_REQUEST_CODE);
-        }*/
     }
 
     @Override
@@ -99,27 +92,29 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO
         if (resultCode == Activity.RESULT_OK && requestCode == Const.OPEN_GALLERY_REQUEST_CODE) {
             MainActivity activity = ((MainActivity) getActivity());
-            if (activity != null) {
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                if (selectedImage == null) {
-                    return;
-                }
-                Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                if (cursor == null) {
-                    return;
-                }
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String imgDecodableString = cursor.getString(columnIndex);
-                cursor.close();
-                presenter.onImageResponse(imgDecodableString);
+            Uri selectedImage = data.getData();
+            if (activity != null && selectedImage != null) {
+                String imageString = getImageDecodableStringFromUri(selectedImage);
+                presenter.onImageResponse(imageString);
             }
         } else {
             presenter.onImageSelectionCancelled();
         }
+    }
+
+    private String getImageDecodableStringFromUri(Uri selectedImage) {
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        Cursor cursor = Objects.requireNonNull(getActivity()).getContentResolver().query(selectedImage,
+                filePathColumn, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String imageString = cursor.getString(columnIndex);
+            cursor.close();
+            return imageString;
+        }
+        return "";
     }
 }

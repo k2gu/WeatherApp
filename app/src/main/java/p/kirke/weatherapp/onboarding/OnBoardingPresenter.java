@@ -43,8 +43,12 @@ class OnBoardingPresenter {
     }
 
     void onImageResponse(String imageDecodableString) {
-        preferencesSingleton.setPrefPictureLocation(imageDecodableString);
-        view.openHomeFragment();
+        if (imageDecodableString.isEmpty()) {
+            view.onError(R.string.error_generic);
+        } else {
+            preferencesSingleton.setPrefPictureLocation(imageDecodableString);
+            view.openHomeFragment();
+        }
     }
 
     void onImageSelectionCancelled() {
