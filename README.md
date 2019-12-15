@@ -36,3 +36,10 @@ Selleks, et rakendus korrektselt build'ima saada, tuleks lisada `app` kausta fai
 ## Testid
 Nagu eelnevalt mainitud, on kogu loogika presenterites testidega kaetud. Tänu sellele, on väga hea uuendusi ja muudatusi teha, sest testid kontrollivad, kuidas senikirjutatud loogika töötab.
 Lisaks sellele, on testid ka väga head dokumentatsiooniallikad. Kui teste korraga jooksutada, saab testide nimedest lausetena välja lugeda, mida antud Presenter tegema peaks.
+![](https://github.com/k2gu/WeatherApp/blob/master/Screenshot%202019-12-15%20at%2022.51.16.png)
+
+## Kuvatõmmised äpist
+![](https://github.com/k2gu/WeatherApp/blob/master/device-2019-12-15-225421.png)
+![](https://github.com/k2gu/WeatherApp/blob/master/device-2019-12-15-225451.png)
+![](https://github.com/k2gu/WeatherApp/blob/master/device-2019-12-15-225506.png)
+![](https://github.com/k2gu/WeatherApp/blob/master/device-2019-12-15-225524.png)
