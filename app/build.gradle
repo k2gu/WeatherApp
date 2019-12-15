@@ -1,4 +1,8 @@
 apply plugin: 'com.android.application'
+def keyFile = rootProject.file("app/keys.properties")
+def keyProperties = new Properties()
+keyProperties.load(new FileInputStream(keyFile))
+
 
 android {
     compileSdkVersion 29
@@ -12,6 +16,7 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+        buildConfigField("String", "weatherApiKey", keyProperties["weatherApiKey"])
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

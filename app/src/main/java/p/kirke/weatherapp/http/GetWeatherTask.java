@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import p.kirke.weatherapp.BuildConfig;
 import p.kirke.weatherapp.home.DataCallback;
 import p.kirke.weatherapp.model.WeatherResponse;
 import p.kirke.weatherapp.util.Const;
@@ -44,7 +45,7 @@ public class GetWeatherTask extends AsyncTask<String, String, String> {
 
     private String getUrl(String latitude, String longitude) {
         // TODO api key
-        return String.format(Const.GET_WEATHER_INFO_URL, latitude, longitude, "2e2e4852410b620409778022df20b777");
+        return String.format(Const.GET_WEATHER_INFO_URL, latitude, longitude, BuildConfig.weatherApiKey);
     }
 
     @Override
