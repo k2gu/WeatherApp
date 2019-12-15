@@ -93,6 +93,19 @@ public class HomePresenter implements DataCallback {
 
     private void saveData(WeatherResponse response, int roundedActualTemp, int roundedFeelableTemp) {
         String todaysDate = DateUtil.getTodaysDate();
+        String subLocalityName = response.getSubLocalityName();
+        // TODO this is a sloppy bugfix.
+        //  The weatherAPI sometimes returns a different location than device
+        //  and therefore the app thinks the device has moved to another location. In order to avoid
+        //  having every request response inserting the same data to history list over and over again
+        //  the following check is needed. In order to fix this bug nicely and not make a request at
+        //  all some investigation is needed.
+        //  One solution would be to ask the city name from one API (e.g. the helper method in locationhandler).
+        //  the issue with that is I haven't tested what happens if the user is in the middle of nowhere -
+        //  far away from cities.
+        if (hasRequestedDataToday() && preferencesSingleton.getPrefLastKnownLocation().equals(subLocalityName)) {
+            return;
+        }
         preferencesSingleton.setPrefLastKnownDate(todaysDate);
         preferencesSingleton.setPrefLastKnownLocation(response.getSubLocalityName());
         repository.addNewHistoryElement(new WeatherHistory(response.getSubLocalityName(), roundedActualTemp, roundedFeelableTemp, todaysDate));

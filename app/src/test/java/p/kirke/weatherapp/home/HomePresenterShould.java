@@ -49,6 +49,7 @@ public class HomePresenterShould {
     private ArgumentCaptor<WeatherHistory> weatherHistoryCaptor;
 
     private HomePresenter presenter;
+    private static final String ANY_DATE = "Any date";
     private static final String ANY_NAME = "Any name";
     private static final String ANY_PICTURE_LOCATION = "Any location";
     private static final int ANY_TEMP = 10;
@@ -160,7 +161,7 @@ public class HomePresenterShould {
 
     @Test
     public void save_data_to_preferences_singleton_on_response_if_response_is_valid() {
-        // nothing to prepare
+        given(preferencesSingleton.getPrefLastKnownDate()).willReturn(ANY_DATE);
 
         presenter.onResponse(getValidResponse(), false);
 
@@ -170,7 +171,7 @@ public class HomePresenterShould {
 
     @Test
     public void save_data_to_local_database_on_response_if_response_is_valid() {
-        // nothing to prepare
+        given(preferencesSingleton.getPrefLastKnownDate()).willReturn(ANY_DATE);
 
         presenter.onResponse(getValidResponse(), false);
 
