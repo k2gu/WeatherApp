@@ -61,7 +61,7 @@ public class HomePresenter implements DataCallback {
         if (!(hasRequestedDataToday() && isInSameLocation(latitude, longitude))) {
             executeRequest(latitude, longitude);
         } else {
-            view.showLoading(false);
+            repository.getLastEntry(this);
         }
     }
 

@@ -44,7 +44,6 @@ public class GetWeatherTask extends AsyncTask<String, String, String> {
     }
 
     private String getUrl(String latitude, String longitude) {
-        // TODO api key
         return String.format(Const.GET_WEATHER_INFO_URL, latitude, longitude, BuildConfig.weatherApiKey);
     }
 

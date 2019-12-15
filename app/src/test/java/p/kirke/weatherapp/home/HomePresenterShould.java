@@ -141,11 +141,6 @@ public class HomePresenterShould {
     }
 
     @Test
-    public void hide_loading_on_location_result_if_has_this_days_info_and_location_hasnt_changed() {
-        // TODO
-    }
-
-    @Test
     public void hide_loading_on_data_response() {
         // nothing to prepare
 
