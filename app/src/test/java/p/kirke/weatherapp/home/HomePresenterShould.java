@@ -71,35 +71,13 @@ public class HomePresenterShould {
     }
 
     @Test
-    public void display_user_image_on_start_if_has_external_storage_permission() {
-        given(permissionHandler.hasReadExternalStoragePermission()).willReturn(true);
-        given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
-
-        presenter.start(true);
-
-        verify(view).displayUserImage(ANY_PICTURE_LOCATION);
-    }
-
-    @Test
-    public void request_external_storage_permission_on_start_if_does_not_have_it() {
-        given(permissionHandler.hasReadExternalStoragePermission()).willReturn(false);
-
-        presenter.start(true);
-
-        verify(permissionHandler).requestReadExternalStoragePermission();
-    }
-
-    @Test
-    public void show_loading_after_showing_picture_and_name_on_start() {
+    public void show_loading_after_showing_name_on_start() {
         given(preferencesSingleton.getName()).willReturn(ANY_NAME);
-        given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
         given(permissionHandler.hasReadExternalStoragePermission()).willReturn(true);
 
         presenter.start(true);
 
         InOrder order = inOrder(view);
-        order.verify(view).showName(ANY_NAME);
-        order.verify(view).displayUserImage(ANY_PICTURE_LOCATION);
         order.verify(view).showLoading(true);
     }
 
@@ -289,6 +267,25 @@ public class HomePresenterShould {
         presenter.onPermissionResponse(Const.READ_EXTERNAL_STORAGE_REQUEST_CODE, ANY_PERMISSION, ANY_RESULT);
 
         verify(view).showImagePlaceholder();
+    }
+
+    @Test
+    public void request_external_storage_permission_on_handle_user_image_if_does_not_have_it() {
+        given(permissionHandler.hasReadExternalStoragePermission()).willReturn(false);
+
+        presenter.handleUserImage();
+
+        verify(permissionHandler).requestReadExternalStoragePermission();
+    }
+
+    @Test
+    public void display_user_image_on_start_if_has_external_storage_permission() {
+        given(permissionHandler.hasReadExternalStoragePermission()).willReturn(true);
+        given(preferencesSingleton.getPrefPictureLocation()).willReturn(ANY_PICTURE_LOCATION);
+
+        presenter.handleUserImage();
+
+        verify(view).displayUserImage(ANY_PICTURE_LOCATION);
     }
 }
 

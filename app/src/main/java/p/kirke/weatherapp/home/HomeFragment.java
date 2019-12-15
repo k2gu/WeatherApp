@@ -2,6 +2,7 @@ package p.kirke.weatherapp.home;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -22,6 +23,7 @@ import p.kirke.weatherapp.MainActivity;
 import p.kirke.weatherapp.PermissionHandler;
 import p.kirke.weatherapp.PreferencesSingleton;
 import p.kirke.weatherapp.R;
+import p.kirke.weatherapp.ThreadHandler;
 import p.kirke.weatherapp.db.WeatherHistoryRepository;
 
 public class HomeFragment extends Fragment implements HomeView {
@@ -43,19 +45,24 @@ public class HomeFragment extends Fragment implements HomeView {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this, view);
+        getPresenter().handleUserImage();
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private HomePresenter getPresenter() {
         if (presenter == null) {
             presenter = new HomePresenter(this, PreferencesSingleton.getSingletonInstance(getContext()),
                     new WeatherHistoryRepository(getContext()), new PermissionHandler(getActivity()),
                     new LocationHandler(getActivity()));
         }
+        return presenter;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (!resumingFromError) {
-            presenter.start(hasNetworkConnection());
+            getPresenter().start(hasNetworkConnection());
         }
         resumingFromError = false;
     }
@@ -108,7 +115,13 @@ public class HomeFragment extends Fragment implements HomeView {
 
     @Override
     public void displayUserImage(String image) {
-        userAvatar.setImageBitmap(BitmapFactory.decodeFile(image));
+        ThreadHandler threadHandler = ThreadHandler.getInstance();
+        threadHandler.runOnBackground(() -> {
+                    Bitmap bitmap = BitmapFactory.decodeFile(image);
+                    threadHandler.runOnUi(() -> userAvatar.setImageBitmap(bitmap));
+                }
+
+        );
     }
 
     @Override

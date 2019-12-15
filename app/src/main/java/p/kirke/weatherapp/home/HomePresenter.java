@@ -30,21 +30,12 @@ public class HomePresenter implements DataCallback {
     void start(boolean hasNetworkConnection) {
         view.hideError();
         view.showName(preferencesSingleton.getName());
-        getUserImage();
 
         if (hasNetworkConnection) {
             view.showLoading(true);
             getLocation();
         } else {
             view.onError(R.string.error_no_internet);
-        }
-    }
-
-    private void getUserImage() {
-        if (permissionHandler.hasReadExternalStoragePermission()) {
-            view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
-        } else {
-            permissionHandler.requestReadExternalStoragePermission();
         }
     }
 
@@ -143,6 +134,14 @@ public class HomePresenter implements DataCallback {
             view.showImagePlaceholder();
             view.onError(R.string.error_denied_external_storage);
             view.showLoading(false);
+        }
+    }
+
+    void handleUserImage() {
+        if (permissionHandler.hasReadExternalStoragePermission()) {
+            view.displayUserImage(preferencesSingleton.getPrefPictureLocation());
+        } else {
+            permissionHandler.requestReadExternalStoragePermission();
         }
     }
 }
