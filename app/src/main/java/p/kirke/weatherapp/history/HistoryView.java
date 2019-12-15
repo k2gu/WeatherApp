@@ -7,6 +7,10 @@ import p.kirke.weatherapp.db.WeatherHistory;
 
 public interface HistoryView extends ErrorHandlingView {
 
+    void showLoading();
+
+    void hideLoading();
+
     void showList(List<WeatherHistory> historyList);
 
     void showNoInfoYetMessage();

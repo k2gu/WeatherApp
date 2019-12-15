@@ -39,6 +39,15 @@ public class HistoryPresenter_should {
     }
 
     @Test
+    public void show_loading_on_start() {
+        // nothing to prepare
+
+        presenter.start();
+
+        verify(view).showLoading();
+    }
+
+    @Test
     public void request_data_from_repository_on_start() {
         // nothing to prepare
 
@@ -49,22 +58,35 @@ public class HistoryPresenter_should {
 
     @Test
     public void pass_list_from_response_to_view_on_response_if_response_is_not_null_nor_empty() {
-        List<WeatherHistory> historyList = new ArrayList<>();
-        historyList.add(new WeatherHistory(ANY_NAME, ANY_TEMP, ANY_FEELABLE_TEMP, ANY_DATE));
+        List<WeatherHistory> historyList = getValidResponse();
 
         presenter.onResponse(historyList);
 
         verify(view).showList(historyList);
     }
 
-    @Test
-    public void hide_no_info_message_on_response_if_response_is_not_null_nor_empty() {
+    private List<WeatherHistory> getValidResponse() {
         List<WeatherHistory> historyList = new ArrayList<>();
         historyList.add(new WeatherHistory(ANY_NAME, ANY_TEMP, ANY_FEELABLE_TEMP, ANY_DATE));
+        return historyList;
+    }
+
+    @Test
+    public void hide_no_info_message_on_response_if_response_is_not_null_nor_empty() {
+        List<WeatherHistory> historyList = getValidResponse();
 
         presenter.onResponse(historyList);
 
         verify(view).hideNoInfoYetMessage();
+    }
+
+    @Test
+    public void hide_loading_on_start() {
+        List<WeatherHistory> historyList = getValidResponse();
+
+        presenter.onResponse(historyList);
+
+        verify(view).hideLoading();
     }
 
     @Test

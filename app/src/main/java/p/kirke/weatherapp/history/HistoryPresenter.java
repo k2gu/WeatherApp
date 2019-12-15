@@ -17,6 +17,7 @@ public class HistoryPresenter implements HistoryCallback {
     }
 
     void start() {
+        view.showLoading();
         repository.getAllData(this);
     }
 
@@ -24,6 +25,7 @@ public class HistoryPresenter implements HistoryCallback {
     public void onResponse(List<WeatherHistory> historyList) {
         if (historyList != null && historyList.size() > 0) {
             view.hideNoInfoYetMessage();
+            view.hideLoading();
             view.showList(historyList);
         } else {
             view.showNoInfoYetMessage();

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,8 @@ public class HistoryFragment extends Fragment implements HistoryView {
     TextView noInfoYet;
     @BindView(R.id.history_list)
     RecyclerView recyclerView;
+    @BindView(R.id.loading_bar)
+    ProgressBar loadingBar;
 
     private WeatherHistoryRepository repository;
     private HistoryPresenter presenter;
@@ -54,6 +57,19 @@ public class HistoryFragment extends Fragment implements HistoryView {
     }
 
     @Override
+    public void showLoading() {
+        loadingBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        noInfoYet.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideLoading() {
+        loadingBar.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void showList(List<WeatherHistory> historyList) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(new HistoryAdapter(historyList));
@@ -62,6 +78,7 @@ public class HistoryFragment extends Fragment implements HistoryView {
     @Override
     public void showNoInfoYetMessage() {
         noInfoYet.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
     }
 
     @Override
