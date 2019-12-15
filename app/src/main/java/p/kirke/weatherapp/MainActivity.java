@@ -107,4 +107,10 @@ public class MainActivity extends AppCompatActivity {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ThreadHandler.getInstance().destroy();
+    }
 }
