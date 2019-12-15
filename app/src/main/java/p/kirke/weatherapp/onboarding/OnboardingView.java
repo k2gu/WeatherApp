@@ -6,7 +6,5 @@ public interface OnboardingView extends ErrorHandlingView {
 
     void openGallery();
 
-    void savePicture(String pictureLocation);
-
     void openHomeFragment();
 }

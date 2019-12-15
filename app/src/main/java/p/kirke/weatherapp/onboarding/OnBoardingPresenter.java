@@ -42,9 +42,8 @@ class OnBoardingPresenter {
         }
     }
 
-    void onImageResponse(String imgDecodableString) {
-        preferencesSingleton.setPrefPictureLocation(imgDecodableString);
-        view.savePicture(imgDecodableString);
+    void onImageResponse(String imageDecodableString) {
+        preferencesSingleton.setPrefPictureLocation(imageDecodableString);
         view.openHomeFragment();
     }
 

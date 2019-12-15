@@ -71,11 +71,9 @@ public class HomePresenter implements DataCallback {
     }
 
     private boolean isInSameLocation(double latitude, double longitude) {
-        //TODO
         String lastKnownLocation = preferencesSingleton.getPrefLastKnownLocation();
         String currentLocation = locationHandler.getSubLocalityFromCoordinates(latitude, longitude);
-        //return lastKnownLocation.equals(currentLocation);
-        return false;
+        return lastKnownLocation.equals(currentLocation);
     }
 
     private void executeRequest(double latitude, double longitude) {

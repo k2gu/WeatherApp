@@ -55,7 +55,7 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
     @Override
     public void onError(int message) {
         MainActivity activity = (MainActivity) getActivity();
-        if (activity != null && isVisible()) { // Todo kas läheb ka teise tabi?
+        if (activity != null) {
             activity.showError(message);
         }
     }
@@ -80,11 +80,6 @@ public class OnBoardingFragment extends Fragment implements OnboardingView {
         if (activity != null) {
             getActivity().startActivityForResult(intent, Const.OPEN_GALLERY_REQUEST_CODE);
         }*/
-    }
-
-    @Override
-    public void savePicture(String pictureLocation) {
-        // TODO
     }
 
     @Override

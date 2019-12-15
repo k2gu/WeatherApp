@@ -108,7 +108,6 @@ public class HomeFragment extends Fragment implements HomeView {
 
     @Override
     public void displayUserImage(String image) {
-        //TODO save image
         userAvatar.setImageBitmap(BitmapFactory.decodeFile(image));
     }
 
