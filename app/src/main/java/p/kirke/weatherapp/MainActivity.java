@@ -41,8 +41,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpPushNotification() {
-        NotificationHandler notification = new NotificationHandler(this);
-        notification.scheduleNotification();
+        NotificationHandler.getInstance().scheduleNotification(this);
     }
 
     private void createFragmentViewPager() {

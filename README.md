@@ -34,3 +34,4 @@ WeatherAPI võti ei ole projektis kättesaadav, mistõttu ta alla tõmmates ei t
 
 ## Testid
 Nagu eelnevalt mainitud, on kogu loogika presenterites testidega kaetud. Tänu sellele, on väga hea uuendusi ja muudatusi teha, sest testid kontrollivad, kuidas senikirjutatud loogika töötab.
+Lisaks sellele, on testid ka väga head dokumentatsiooniallikad. Kui teste korraga jooksutada, saab testide nimedest lausetena välja lugeda, mida antud Presenter tegema peaks.
