@@ -25,15 +25,13 @@ class LocationHandler {
     @SuppressLint("MissingPermission")
     void getUserLocation(DataCallback callback) {
         LocationManager locationManager = (LocationManager) activity.getApplicationContext().getSystemService(LOCATION_SERVICE);
-        //TODO
         if (locationManager != null && locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (location != null) {
                 callback.onLocationResult(location.getLatitude(), location.getLongitude());
             } else {
                 locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        2000,
-                        10, getLocationListener(callback));
+                        2000, 10, getLocationListener(callback));
             }
         }
     }
@@ -74,8 +72,7 @@ class LocationHandler {
                 return addresses.get(0).getSubLocality();
             }
         } catch (Exception e) {
-            // TODO
-            e.printStackTrace(); // getFromLocation() may sometimes fail
+            return "";
         }
         return "";
     }
