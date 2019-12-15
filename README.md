@@ -19,8 +19,9 @@ Pildi salvestamine antud rakenduse kontekstis tähendab seda, et on salvestatud 
 Lokaalse baasiga suhtlemiseks kasutab rakendus abiklassi nimega ThreadHandler. Kogu suhtlus lokaalse baasiga toimub eraldi thread'il.
 
 ## Suhtlus weatherAPIga
-Ka weatherAPIga toimuv suhtlus toimub taustathread'il. Siinkohal on kasutatud AsyncTaski. Seda taski on tõenäoliselt vaja välja kutsuda kord päevas või kui kasutaja liigub ringi ja soovib uue koha ilma näha. 
+Ka weatherAPIga toimuv suhtlus toimub taustathread'il. Siinkohal on kasutatud AsyncTaski. Seda taski on tõenäoliselt vaja välja kutsuda kord päevas või kui kasutaja liigub ringi ja soovib uue koha ilma näha. Kuna veebipäringuid on täpselt üks, ei näinud ma mõtet integreerida mõnda olemasolevat teeki (näiteks Retrofit) rakendusse.
 WeatherAPI võti ei ole projektis kättesaadav, mistõttu ta alla tõmmates ei tohiks ka buildida. Võtit projektis kaasas ei ole, sest selle kaasa panemine oleks turvarisk. Eriti arvestades, et tegu on avaliku repositooriumiga. Tegelikult on antud juhul võti ajaloost nähtav. Ei hakanud seda peitma, sest tegu on proovitööga.
+Selleks, et rakendus korrektselt build'ima saada, tuleks lisada `app` kausta fail `keys.properties` ning lisada sinna järgnev rida: `weatherApiKey=<API KEY> `
 
 ## Toetatud veajuhud
 * Internetti ei ole, kui päringuid tahetakse teha
